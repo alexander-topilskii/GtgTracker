@@ -91,6 +91,26 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
             Норматив: <span className="text-zinc-200">{exercise.defaultReps} повт.</span>
             {exercise.weight ? ` • ${exercise.weight} кг` : ''}
           </p>
+          {exercise.timeSlots && exercise.timeSlots.length > 0 && (
+            <div className="flex items-center flex-wrap gap-1 mt-1.5">
+              <span className="text-[10px] text-zinc-500 font-mono">Время:</span>
+              {exercise.timeSlots.map((time, idx) => {
+                const isDone = idx < completedCount;
+                return (
+                  <span
+                    key={`${time}_${idx}`}
+                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded border transition-colors ${
+                      isDone
+                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 line-through opacity-75'
+                        : 'bg-zinc-800/80 border-white/10 text-zinc-300'
+                    }`}
+                  >
+                    {time}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <button

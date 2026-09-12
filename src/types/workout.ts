@@ -1,11 +1,21 @@
 export type DayType = 'A' | 'B' | 'REST' | string;
 
+export interface ScheduleSlot {
+  id: string;
+  time: string; // Например, "10:00", "11:30"
+  exerciseId: string;
+  exerciseName: string;
+  reps: number;
+  weight?: number;
+}
+
 export interface ExerciseConfig {
   id: string;
   name: string;
   targetSets: number;
   defaultReps: number;
   weight?: number; // опциональный рабочий вес в кг
+  timeSlots?: string[]; // Рекомендуемые слоты времени, например: ["10:00", "14:30", "17:30"]
   notes?: string;
 }
 
@@ -14,6 +24,7 @@ export interface DayPlanConfig {
   title: string;
   description?: string;
   exercises: ExerciseConfig[];
+  schedule?: ScheduleSlot[];
 }
 
 export interface WorkoutProgramConfig {

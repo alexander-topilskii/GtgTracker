@@ -16,18 +16,20 @@ resetAllData();
 
 // 2. Verify default program initialization
 const program = getProgram();
-console.assert(program.version === 1, 'Program version should be 1');
+console.assert(program.version === 2, 'Program version should be 2');
 console.assert(program.days['A'].exercises.length === 3, 'Day A should have 3 exercises');
-console.assert(program.days['B'].exercises.length === 3, 'Day B should have 3 exercises');
+console.assert(program.days['B'].exercises.length === 4, 'Day B should have 4 exercises');
+console.assert(program.days['A'].schedule?.length === 8, 'Day A should have 8 schedule slots');
+console.assert(program.days['B'].schedule?.length === 7, 'Day B should have 7 schedule slots');
 console.log('✅ Default program initialized correctly');
 
 // 3. Log a set for Day A
 const pullUpExercise = program.days['A'].exercises[0];
 const testDate = '2026-09-12';
-const loggedSet = logSet(testDate, 'A', pullUpExercise, 5);
+const loggedSet = logSet(testDate, 'A', pullUpExercise, 10);
 
-console.assert(loggedSet.exerciseNameSnapshot === 'Подтягивания (Pull-ups)', 'Snapshot must preserve original name');
-console.assert(loggedSet.reps === 5, 'Reps should match logged reps');
+console.assert(loggedSet.exerciseNameSnapshot === 'Подтягивания', 'Snapshot must preserve original name');
+console.assert(loggedSet.reps === 10, 'Reps should match logged reps');
 
 const dayRecord = getDayRecord(testDate);
 console.assert(dayRecord.completedSets.length === 1, 'Day record should have 1 completed set');
@@ -47,7 +49,7 @@ console.assert(currentProgram.days['A'].exercises.length === 2, 'Program should 
 const historyRecord = getDayRecord(testDate);
 console.assert(historyRecord.completedSets.length === 1, 'History still has the set');
 console.assert(
-  historyRecord.completedSets[0].exerciseNameSnapshot === 'Подтягивания (Pull-ups)',
+  historyRecord.completedSets[0].exerciseNameSnapshot === 'Подтягивания',
   'History MUST preserve the original exercise name snapshot even after exercise removal!'
 );
 console.log('✅ IMMUTABILITY VERIFIED: Historical records are immune to program changes!');

@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "name": "Grease the Groove — Стандартный сплит (Верх / Руки-Плечи-Ноги)",
+  "version": 2,
+  "name": "Grease the Groove — Расписание по времени",
   "defaultRestIntervalMinutes": 60,
   "days": {
     "A": {
@@ -10,56 +10,90 @@
       "exercises": [
         {
           "id": "pull-ups",
-          "name": "Подтягивания (Pull-ups)",
-          "targetSets": 5,
-          "defaultReps": 5
+          "name": "Подтягивания",
+          "targetSets": 3,
+          "defaultReps": 10,
+          "timeSlots": ["10:00", "14:30", "17:30"]
         },
         {
           "id": "dips",
-          "name": "Отжимания на брусьях (Dips)",
-          "targetSets": 5,
-          "defaultReps": 8
+          "name": "Отжимания на брусьях",
+          "targetSets": 3,
+          "defaultReps": 10,
+          "timeSlots": ["11:30", "16:00", "18:30"]
         },
         {
           "id": "leg-raises",
-          "name": "Подъем ног к перекладине",
-          "targetSets": 4,
-          "defaultReps": 8
+          "name": "Подъем ног",
+          "targetSets": 2,
+          "defaultReps": 10,
+          "timeSlots": ["13:00", "19:30"]
         }
+      ],
+      "schedule": [
+        { "id": "a_1", "time": "10:00", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 10 },
+        { "id": "a_2", "time": "11:30", "exerciseId": "dips", "exerciseName": "Отжимания на брусьях", "reps": 10 },
+        { "id": "a_3", "time": "13:00", "exerciseId": "leg-raises", "exerciseName": "Подъем ног", "reps": 10 },
+        { "id": "a_4", "time": "14:30", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 10 },
+        { "id": "a_5", "time": "16:00", "exerciseId": "dips", "exerciseName": "Отжимания на брусьях", "reps": 10 },
+        { "id": "a_6", "time": "17:30", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 10 },
+        { "id": "a_7", "time": "18:30", "exerciseId": "dips", "exerciseName": "Отжимания на брусьях", "reps": 10 },
+        { "id": "a_8", "time": "19:30", "exerciseId": "leg-raises", "exerciseName": "Подъем ног", "reps": 10 }
       ]
     },
     "B": {
       "dayType": "B",
-      "title": "День Б — Руки, Плечи, Ноги",
-      "description": "Гантели и приседания",
+      "title": "День Б — Ноги, Плечи, Руки",
+      "description": "Приседания, махи и бицепс",
       "exercises": [
         {
-          "id": "bicep-curls",
-          "name": "Подъем гантелей на бицепс",
-          "targetSets": 4,
-          "defaultReps": 10,
-          "weight": 12
+          "id": "squats",
+          "name": "Приседания",
+          "targetSets": 2,
+          "defaultReps": 15,
+          "timeSlots": ["10:00", "14:30"]
         },
         {
           "id": "lateral-raises",
-          "name": "Махи с гантелями в стороны",
-          "targetSets": 4,
-          "defaultReps": 12,
-          "weight": 8
+          "name": "Махи в стороны",
+          "targetSets": 1,
+          "defaultReps": 10,
+          "weight": 8,
+          "timeSlots": ["11:30"]
         },
         {
-          "id": "squats",
-          "name": "Приседания / Болгарские сплит",
-          "targetSets": 5,
-          "defaultReps": 15
+          "id": "bicep-curls",
+          "name": "Подъем гантелей на бицепс",
+          "targetSets": 2,
+          "defaultReps": 10,
+          "weight": 12,
+          "timeSlots": ["13:00", "17:30"]
+        },
+        {
+          "id": "front-raises",
+          "name": "Махи перед собой",
+          "targetSets": 2,
+          "defaultReps": 10,
+          "weight": 8,
+          "timeSlots": ["16:00", "19:00"]
         }
+      ],
+      "schedule": [
+        { "id": "b_1", "time": "10:00", "exerciseId": "squats", "exerciseName": "Приседания", "reps": 15 },
+        { "id": "b_2", "time": "11:30", "exerciseId": "lateral-raises", "exerciseName": "Махи в стороны", "reps": 10, "weight": 8 },
+        { "id": "b_3", "time": "13:00", "exerciseId": "bicep-curls", "exerciseName": "Подъем гантелей на бицепс", "reps": 10, "weight": 12 },
+        { "id": "b_4", "time": "14:30", "exerciseId": "squats", "exerciseName": "Приседания", "reps": 15 },
+        { "id": "b_5", "time": "16:00", "exerciseId": "front-raises", "exerciseName": "Махи перед собой", "reps": 10, "weight": 8 },
+        { "id": "b_6", "time": "17:30", "exerciseId": "bicep-curls", "exerciseName": "Подъем гантелей на бицепс", "reps": 10, "weight": 12 },
+        { "id": "b_7", "time": "19:00", "exerciseId": "front-raises", "exerciseName": "Махи перед собой", "reps": 10, "weight": 8 }
       ]
     },
     "REST": {
       "dayType": "REST",
       "title": "День отдыха",
       "description": "Полное восстановление ЦНС и связок",
-      "exercises": []
+      "exercises": [],
+      "schedule": []
     }
   }
 }

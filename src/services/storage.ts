@@ -71,7 +71,14 @@ export function getProgram(): WorkoutProgramConfig {
     return initialProgram;
   }
   try {
-    return JSON.parse(raw) as WorkoutProgramConfig;
+    const parsed = JSON.parse(raw) as WorkoutProgramConfig;
+    // Автоматическая миграция на новую версию программы по умолчанию при обновлении
+    if (!parsed.version || parsed.version < defaultProgramData.version) {
+      const updated = defaultProgramData as WorkoutProgramConfig;
+      saveProgram(updated);
+      return updated;
+    }
+    return parsed;
   } catch {
     return defaultProgramData as WorkoutProgramConfig;
   }
