@@ -67,4 +67,39 @@ const restoredRecord = getDayRecord(testDate);
 console.assert(restoredRecord.completedSets.length === 1, 'Restored record has the historical set intact');
 console.log('✅ Backup export and import verified');
 
+// 6. Test Automatic Day Rotation Logic (A -> B -> A, Sunday = REST)
+import { getAutoDayType } from '../src/utils/dateUtils';
+
+// Пустая история в понедельник (2026-09-14) -> День А
+const emptyDay = getAutoDayType('2026-09-14', {});
+console.assert(emptyDay === 'A', 'Empty history on Monday should start with Day A');
+
+// Воскресенье (2026-09-13) -> Отдых
+const sundayDay = getAutoDayType('2026-09-13', {});
+console.assert(sundayDay === 'REST', 'Sunday must always be REST');
+
+// Вчера (2026-09-14) был День А -> сегодня (2026-09-15) должен быть День Б
+const historyWithA: Record<string, any> = {
+  '2026-09-14': { date: '2026-09-14', dayType: 'A', completedSets: [{ id: '1' }] },
+};
+const tuesdayDay = getAutoDayType('2026-09-15', historyWithA);
+console.assert(tuesdayDay === 'B', 'Day after Day A should automatically be Day B');
+
+// Вчера (2026-09-15) был День Б -> сегодня (2026-09-16) должен быть День А
+const historyWithB: Record<string, any> = {
+  ...historyWithA,
+  '2026-09-15': { date: '2026-09-15', dayType: 'B', completedSets: [{ id: '2' }] },
+};
+const wednesdayDay = getAutoDayType('2026-09-16', historyWithB);
+console.assert(wednesdayDay === 'A', 'Day after Day B should automatically be Day A');
+
+// В субботу (2026-09-12) был День А, в воскресенье (2026-09-13) отдых -> в понедельник (2026-09-14) должен быть День Б
+const historySatA: Record<string, any> = {
+  '2026-09-12': { date: '2026-09-12', dayType: 'A', completedSets: [{ id: '1' }] },
+  '2026-09-13': { date: '2026-09-13', dayType: 'REST', completedSets: [] },
+};
+const mondayAfterSunday = getAutoDayType('2026-09-14', historySatA);
+console.assert(mondayAfterSunday === 'B', 'Monday after Sunday rest should continue rotation to Day B');
+console.log('✅ Automatic A/B/REST Day Rotation Logic Verified!');
+
 console.log('🎉 ALL DATA LAYER & IMMUTABILITY TESTS PASSED!');

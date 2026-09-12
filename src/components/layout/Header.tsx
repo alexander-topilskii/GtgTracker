@@ -37,15 +37,6 @@ export const Header: React.FC<HeaderProps> = ({
           </p>
         </div>
       </div>
-
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900/80 border border-white/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[10px] font-mono text-zinc-400 tracking-wider uppercase">
-            Local-First
-          </span>
-        </div>
-      </div>
     </header>
   );
 };

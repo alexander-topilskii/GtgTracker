@@ -1,4 +1,4 @@
-import { DayType } from '../types/workout';
+import { DayType, DayRecord } from '../types/workout';
 
 // Форматирование даты в YYYY-MM-DD в локальном часовом поясе
 export function formatToDateKey(date: Date = new Date()): string {
@@ -34,4 +34,45 @@ export function getDefaultDayTypeForDate(date: Date = new Date()): DayType {
   const startOfYear = new Date(date.getFullYear(), 0, 1);
   const dayOfYear = Math.floor((date.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
   return dayOfYear % 2 === 0 ? 'A' : 'B';
+}
+
+/**
+ * Автоматический расчет типа дня на основе истории:
+ * - Если воскресенье -> всегда отдых ('REST')
+ * - Если в предыдущий зафиксированный день был 'A' -> сегодня 'B'
+ * - Если в предыдущий зафиксированный день был 'B' -> сегодня 'A'
+ * - Если истории нет -> 'A'
+ */
+export function getAutoDayType(
+  targetDateKey: string,
+  history: Record<string, DayRecord> = {}
+): DayType {
+  const targetDate = parseDateKey(targetDateKey);
+
+  // Каждое воскресенье — день отдыха
+  if (targetDate.getDay() === 0) {
+    return 'REST';
+  }
+
+  // Находим все предыдущие дни в истории до целевой даты
+  const pastDates = Object.keys(history)
+    .filter((d) => d < targetDateKey)
+    .sort((a, b) => b.localeCompare(a)); // Свежие первыми
+
+  // Ищем последний тренировочный день (с подходами или явно заданный не-REST)
+  for (const date of pastDates) {
+    const record = history[date];
+    if (record) {
+      const hasSets = record.completedSets && record.completedSets.length > 0;
+      const isConfiguredDay = record.dayType && record.dayType !== 'REST';
+
+      if (hasSets || isConfiguredDay) {
+        if (record.dayType === 'A') return 'B';
+        if (record.dayType === 'B') return 'A';
+      }
+    }
+  }
+
+  // Если истории нет, начинаем с дня А
+  return 'A';
 }

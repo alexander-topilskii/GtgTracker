@@ -9,7 +9,7 @@ import {
   DayPlanConfig,
 } from '../types/workout';
 import * as storage from '../services/storage';
-import { formatToDateKey, getDefaultDayTypeForDate } from '../utils/dateUtils';
+import { formatToDateKey, getAutoDayType } from '../utils/dateUtils';
 import defaultProgramJson from '../data/defaultProgram.json';
 
 interface WorkoutContextValue {
@@ -61,15 +61,15 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setSettingsState(updated);
   }, [settings]);
 
-  // Запись за активный день (если нет в истории, создаем виртуальную с дефолтным днем)
+  // Запись за активный день (если нет в истории, автоматически вычисляем день А/Б или отдых)
   const activeRecord = useMemo<DayRecord>(() => {
     if (history[activeDate]) {
       return history[activeDate];
     }
-    const defaultDayType = getDefaultDayTypeForDate(new Date());
+    const autoDayType = getAutoDayType(activeDate, history);
     return {
       date: activeDate,
-      dayType: defaultDayType,
+      dayType: autoDayType,
       completedSets: [],
     };
   }, [history, activeDate]);

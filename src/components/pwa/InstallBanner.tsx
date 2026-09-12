@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, X, Share } from 'lucide-react';
+import { Download, Smartphone, Share, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { haptic } from '../../utils/haptics';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -9,43 +9,28 @@ interface BeforeInstallPromptEvent extends Event {
 
 export const InstallBanner: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showBanner, setShowBanner] = useState<boolean>(false);
+  const [isStandalone, setIsStandalone] = useState<boolean>(false);
   const [isIOS, setIsIOS] = useState<boolean>(false);
-  const [showIOSGuide, setShowIOSGuide] = useState<boolean>(false);
+  const [showGuide, setShowGuide] = useState<boolean>(false);
+  const [installedSuccessfully, setInstalledSuccessfully] = useState<boolean>(false);
 
   useEffect(() => {
-    // 1. Проверяем, запущено ли уже в Standalone режиме
-    const isStandalone =
+    // 1. Проверяем режим Standalone
+    const checkStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       (navigator as unknown as { standalone?: boolean }).standalone === true;
 
-    if (isStandalone) {
-      return; // Уже установлено
-    }
+    setIsStandalone(checkStandalone);
 
-    // 2. Проверяем, не скрывал ли пользователь баннер недавно
-    const dismissedAt = localStorage.getItem('gtg_pwa_dismissed');
-    if (dismissedAt) {
-      const timeDiff = Date.now() - Number(dismissedAt);
-      if (timeDiff < 7 * 24 * 60 * 60 * 1000) {
-        return; // Скрыто на 7 дней
-      }
-    }
-
-    // 3. Определение iOS Safari
+    // 2. Проверка iOS
     const userAgent = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
     setIsIOS(isIosDevice);
 
-    if (isIosDevice) {
-      setShowBanner(true);
-    }
-
-    // 4. Перехват beforeinstallprompt для Android / Chrome
+    // 3. Перехват beforeinstallprompt для Android / Chrome
     const handleBeforeInstall = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowBanner(true);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
@@ -55,81 +40,122 @@ export const InstallBanner: React.FC = () => {
     };
   }, []);
 
-  const handleDismiss = () => {
-    localStorage.setItem('gtg_pwa_dismissed', String(Date.now()));
-    setShowBanner(false);
-    setShowIOSGuide(false);
-  };
-
   const handleInstallClick = async () => {
     haptic.trigger('light');
     if (deferredPrompt) {
       await deferredPrompt.prompt();
       const choice = await deferredPrompt.userChoice;
       if (choice.outcome === 'accepted') {
-        setShowBanner(false);
+        setInstalledSuccessfully(true);
       }
       setDeferredPrompt(null);
-    } else if (isIOS) {
-      setShowIOSGuide((prev) => !prev);
+    } else {
+      setShowGuide((prev) => !prev);
     }
   };
 
-  if (!showBanner) return null;
-
-  return (
-    <aside aria-label="Установка приложения" className="w-full px-4 pt-2 shrink-0 animate-fade-in">
-      <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-cyan-950/30 border border-emerald-500/30 backdrop-blur-md shadow-lg">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
-              <Download className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-white font-sans">
-                Установить GtG Tracker
-              </div>
-              <div className="text-[10px] font-mono text-zinc-400">
-                Работа офлайн и без рамок браузера
-              </div>
-            </div>
+  if (isStandalone || installedSuccessfully) {
+    return (
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-emerald-500/25">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            <Check className="w-5 h-5 stroke-[2.5]" />
           </div>
-
-          <div className="flex items-center gap-1.5 shrink-0">
-            <button
-              type="button"
-              onClick={handleInstallClick}
-              className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold font-mono transition-all active:scale-95 glow-emerald"
-            >
-              {isIOS ? 'Инструкция' : 'Установить'}
-            </button>
-            <button
-              type="button"
-              onClick={handleDismiss}
-              className="p-1 rounded-lg text-zinc-400 hover:text-white transition-colors"
-              title="Скрыть"
-            >
-              <X className="w-4 h-4" />
-            </button>
+          <div>
+            <div className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
+              Приложение установлено
+              <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[9px]">
+                Standalone
+              </span>
+            </div>
+            <div className="text-[11px] font-mono text-zinc-400 mt-0.5">
+              Запущено с домашнего экрана. Доступно 100% офлайн.
+            </div>
           </div>
         </div>
+      </div>
+    );
+  }
 
-        {/* Подсказка для пользователей iPhone */}
-        {showIOSGuide && (
-          <div className="mt-2.5 pt-2.5 border-t border-white/[0.08] text-[11px] font-mono text-zinc-300 space-y-1.5 animate-slide-up">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-              <Share className="w-3.5 h-3.5" />
-              <span>Как установить на iOS (Safari):</span>
-            </div>
-            <p className="text-zinc-400 leading-relaxed">
-              1. Нажмите кнопку <strong>«Поделиться»</strong> в нижней панели Safari.
-            </p>
-            <p className="text-zinc-400 leading-relaxed">
-              2. Пролистайте вниз и выберите <strong>«На экран «Домой»»</strong>.
+  return (
+    <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0">
+            <Smartphone className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-xs font-bold text-white font-sans">
+              Установить на устройство (PWA)
+            </h3>
+            <p className="text-[11px] font-mono text-zinc-400 mt-0.5">
+              Полноэкранный режим без рамок браузера и мгновенный доступ.
             </p>
           </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 pt-1">
+        {deferredPrompt ? (
+          <button
+            type="button"
+            onClick={handleInstallClick}
+            className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all active:scale-98 shadow-md shadow-emerald-500/20"
+          >
+            <Download className="w-4 h-4 stroke-[2.5]" />
+            <span>Установить сейчас</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              haptic.trigger('light');
+              setShowGuide((prev) => !prev);
+            }}
+            className="flex-1 py-2.5 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-mono font-semibold flex items-center justify-center gap-2 border border-white/10 transition-all active:scale-98"
+          >
+            <Share className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Инструкция по установке</span>
+            {showGuide ? (
+              <ChevronUp className="w-3.5 h-3.5 text-zinc-400" />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
+            )}
+          </button>
         )}
       </div>
-    </aside>
+
+      {/* Раскрывающаяся инструкция */}
+      {showGuide && (
+        <div className="p-3 rounded-xl bg-zinc-900/90 border border-white/10 text-xs font-mono text-zinc-300 space-y-2 animate-fade-in">
+          {isIOS ? (
+            <>
+              <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                <Share className="w-3.5 h-3.5" />
+                <span>Для пользователей iPhone / iPad (Safari):</span>
+              </div>
+              <ol className="list-decimal list-inside space-y-1 text-zinc-400 leading-relaxed text-[11px]">
+                <li>Нажмите кнопку <strong>«Поделиться»</strong> (иконка со стрелкой вверх) в нижней панели Safari.</li>
+                <li>Пролистайте меню вниз и выберите <strong>«На экран «Домой»»</strong> (Add to Home Screen).</li>
+                <li>Нажмите <strong>«Добавить»</strong> в правом верхнем углу.</li>
+              </ol>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                <Download className="w-3.5 h-3.5" />
+                <span>Для Android / Chrome:</span>
+              </div>
+              <ol className="list-decimal list-inside space-y-1 text-zinc-400 leading-relaxed text-[11px]">
+                <li>Нажмите на меню браузера (<strong>три точки</strong> в правом верхнем углу).</li>
+                <li>Выберите пункт <strong>«Установить приложение»</strong> или <strong>«Добавить на главный экран»</strong>.</li>
+              </ol>
+            </>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
+
+export const InstallBlock = InstallBanner;

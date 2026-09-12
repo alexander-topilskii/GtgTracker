@@ -12,11 +12,13 @@ import {
   Upload,
   AlertOctagon,
   RefreshCw,
+  Calendar,
 } from 'lucide-react';
 import { haptic } from '../../utils/haptics';
+import { InstallBlock } from '../pwa/InstallBanner';
 
 export const SettingsView: React.FC = () => {
-  const { settings, updateSettings, refreshData } = useWorkout();
+  const { settings, updateSettings, refreshData, activeRecord, switchDayType } = useWorkout();
   const [isJsonModalOpen, setIsJsonModalOpen] = useState<boolean>(false);
   const [backupNotice, setBackupNotice] = useState<string | null>(null);
 
@@ -78,7 +80,59 @@ export const SettingsView: React.FC = () => {
 
   return (
     <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-5">
-      {/* 1. Настройка программы тренировок */}
+      {/* 1. Текущий тренировочный день */}
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-emerald-400" />
+            <h3 className="text-sm font-bold text-white font-sans">
+              Текущий тренировочный день
+            </h3>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            Авто-отсчет
+          </span>
+        </div>
+        <p className="text-xs text-zinc-400 font-mono leading-relaxed">
+          Приложение автоматически чередует дни (вчера А → сегодня Б), а каждое воскресенье переходит в режим отдыха. При необходимости выберите день вручную:
+        </p>
+
+        <div className="grid grid-cols-3 gap-1.5 pt-1">
+          {([
+            { type: 'A', label: 'День А', desc: 'Верх (База)' },
+            { type: 'B', label: 'День Б', desc: 'Руки & Ноги' },
+            { type: 'REST', label: 'Отдых', desc: 'Пауза' },
+          ] as const).map((opt) => {
+            const isActive = activeRecord.dayType === opt.type;
+            return (
+              <button
+                key={opt.type}
+                type="button"
+                onClick={() => {
+                  haptic.trigger('light', settings.soundFeedbackEnabled);
+                  switchDayType(opt.type);
+                }}
+                className={`py-2 px-2 rounded-xl text-center transition-all ${
+                  isActive
+                    ? 'bg-emerald-500 text-black font-bold shadow-md shadow-emerald-500/20'
+                    : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-white/5'
+                }`}
+              >
+                <div className="text-xs font-sans font-bold">{opt.label}</div>
+                <div
+                  className={`text-[9px] font-mono mt-0.5 ${
+                    isActive ? 'text-black/80 font-medium' : 'text-zinc-500'
+                  }`}
+                >
+                  {opt.desc}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Настройка программы тренировок */}
       <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-white font-sans">
@@ -206,7 +260,10 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Бэкап и сброс */}
+      {/* 4. Установка как приложения (PWA) */}
+      <InstallBlock />
+
+      {/* 5. Бэкап и сброс */}
       <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
         <h3 className="text-sm font-bold text-white font-sans mb-1">
           Резервное копирование и данные
