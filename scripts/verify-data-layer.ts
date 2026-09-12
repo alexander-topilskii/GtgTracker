@@ -16,7 +16,7 @@ resetAllData();
 
 // 2. Verify default program initialization
 const program = getProgram();
-console.assert(program.version === 2, 'Program version should be 2');
+console.assert(program.version === 3, 'Program version should be 3');
 console.assert(program.days['A'].exercises.length === 3, 'Day A should have 3 exercises');
 console.assert(program.days['B'].exercises.length === 4, 'Day B should have 4 exercises');
 console.assert(program.days['A'].schedule?.length === 8, 'Day A should have 8 schedule slots');

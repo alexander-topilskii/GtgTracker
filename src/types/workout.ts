@@ -7,6 +7,9 @@ export interface ScheduleSlot {
   exerciseName: string;
   reps: number;
   weight?: number;
+  muscle?: string;
+  cue?: string;
+  code?: string;
 }
 
 export interface ExerciseConfig {
@@ -17,6 +20,9 @@ export interface ExerciseConfig {
   weight?: number; // опциональный рабочий вес в кг
   timeSlots?: string[]; // Рекомендуемые слоты времени, например: ["10:00", "14:30", "17:30"]
   notes?: string;
+  muscle?: string;
+  cue?: string;
+  code?: string;
 }
 
 export interface DayPlanConfig {

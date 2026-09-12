@@ -14,7 +14,7 @@ export function AppContent() {
   return (
     <AppContainer>
       {/* Шапка приложения */}
-      <Header />
+      <Header onOpenSettings={() => setActiveTab('settings')} />
 
       {/* Основная рабочая область (без вертикального скролла на дашборде) */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">

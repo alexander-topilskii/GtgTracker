@@ -21,27 +21,44 @@ class HapticManager {
     }
   }
 
-  // Синтезированный короткий тактильный щелчок через Web Audio API
-  playClickSound() {
+  // Синтезированные звуки Web Audio API (snap и complete)
+  playClickSound(type: 'snap' | 'complete' = 'snap') {
     try {
       this.initAudio();
       if (!this.audioContext) return;
+      const now = this.audioContext.currentTime;
 
-      const osc = this.audioContext.createOscillator();
-      const gain = this.audioContext.createGain();
+      if (type === 'snap') {
+        const osc = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(140, this.audioContext.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(40, this.audioContext.currentTime + 0.025);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.03);
 
-      gain.gain.setValueAtTime(0.12, this.audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.025);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
 
-      osc.connect(gain);
-      gain.connect(this.audioContext.destination);
+        osc.connect(gain);
+        gain.connect(this.audioContext.destination);
 
-      osc.start();
-      osc.stop(this.audioContext.currentTime + 0.025);
+        osc.start(now);
+        osc.stop(now + 0.03);
+      } else if (type === 'complete') {
+        [523.25, 659.25, 1046.5].forEach((freq, i) => {
+          if (!this.audioContext) return;
+          const osc = this.audioContext.createOscillator();
+          const gain = this.audioContext.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.035);
+          gain.gain.setValueAtTime(0.12 - i * 0.02, now + i * 0.035);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.035 + 0.35);
+          osc.connect(gain);
+          gain.connect(this.audioContext.destination);
+          osc.start(now + i * 0.035);
+          osc.stop(now + i * 0.035 + 0.35);
+        });
+      }
     } catch {
       // Игнорируем
     }
@@ -65,7 +82,7 @@ class HapticManager {
 
     // 2. Опциональный звуковой клик (особенно полезен для iOS)
     if (enableSound) {
-      this.playClickSound();
+      this.playClickSound(type === 'success' ? 'complete' : 'snap');
     }
   }
 }

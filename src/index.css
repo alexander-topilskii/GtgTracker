@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --color-cyber-bg: #08090d;
-  --color-cyber-card: #12151f;
+  --color-cyber-bg: #060709;
+  --color-cyber-card: #11141c;
   --color-cyber-border: rgba(255, 255, 255, 0.07);
-  --color-neon-emerald: #10b981;
-  --color-neon-cyan: #06b6d4;
-  --color-neon-amber: #f59e0b;
+
+  --color-accent-neon: #ccff00;
+  --color-accent-lime: #d9f99d;
+  --color-accent-emerald: #10b981;
+  --color-accent-amber: #f59e0b;
 }
 
 :root {
@@ -18,6 +20,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -25,13 +28,57 @@ html, body {
   height: 100dvh;
   margin: 0;
   padding: 0;
-  background-color: #08090d;
+  background-color: #060709;
   color: #f4f4f5;
-  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Ambient luxury dark gradient */
+.ambient-bg {
+  background: radial-gradient(circle at 50% 0%, #151922 0%, #060709 65%);
+}
+
+/* Anodized Precision Card with specular rim */
+.precision-card {
+  background: linear-gradient(180deg, #11141c 0%, #0c0e14 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 24px 48px -12px rgba(0, 0, 0, 0.9);
+  border-radius: 28px;
+}
+
+/* Tactile Magnetic Slider Track */
+.slider-track {
+  position: relative;
+  background: #07090e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 2px 6px rgba(0, 0, 0, 0.8),
+    0 1px 0 rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.slider-thumb {
+  cursor: grab;
+  touch-action: none;
+  transition: box-shadow 0.2s ease, transform 0.05s ease-out;
+  background: linear-gradient(135deg, #d9f99d 0%, #ccff00 100%);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(204, 255, 0, 0.35);
+}
+
+.slider-thumb:active {
+  cursor: grabbing;
+  box-shadow: 
+    0 0 24px rgba(204, 255, 0, 0.65),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 /* Hide scrollbar utility */
@@ -44,20 +91,20 @@ html, body {
 }
 
 /* Cyber Glow Utilities */
+.glow-neon {
+  box-shadow: 0 0 20px -2px rgba(204, 255, 0, 0.45);
+}
+
 .glow-emerald {
   box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.4);
 }
 
-.glow-cyan {
-  box-shadow: 0 0 25px -4px rgba(6, 182, 212, 0.4);
+.text-glow-neon {
+  text-shadow: 0 0 12px rgba(204, 255, 0, 0.6);
 }
 
 .text-glow-emerald {
   text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
-}
-
-.text-glow-cyan {
-  text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
 }
 
 /* Glassmorphism surfaces */

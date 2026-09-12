@@ -43,21 +43,21 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               onClick={() => onTabChange(tab.id)}
               className={`flex flex-col items-center justify-center min-h-[48px] min-w-[72px] py-1 px-3 rounded-xl transition-all duration-200 active:scale-95 ${
                 isActive
-                  ? 'text-emerald-400 font-semibold'
+                  ? 'text-[#ccff00] font-bold'
                   : 'text-zinc-500 hover:text-zinc-300'
               }`}
             >
               <div className="relative">
                 <Icon
                   className={`w-5 h-5 transition-transform duration-200 ${
-                    isActive ? 'scale-110 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]' : ''
+                    isActive ? 'scale-110 drop-shadow-[0_0_8px_rgba(204,255,0,0.5)]' : ''
                   }`}
                 />
                 {isActive && (
-                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-emerald-400 glow-emerald" />
+                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#ccff00] shadow-[0_0_8px_#ccff00]" />
                 )}
               </div>
-              <span className="text-[10px] mt-1 tracking-wide font-sans">
+              <span className="text-[10px] mt-1 tracking-wide font-mono">
                 {tab.label}
               </span>
             </button>
