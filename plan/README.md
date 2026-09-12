@@ -8,7 +8,7 @@
 
 | № | Этап | Ключевая цель / Результат | Детальная спецификация | Статус |
 |---|------|---------------------------|------------------------|:------:|
-| **01** | **Scaffolding & Core Architecture** | Инициализация Vite + React + TS + Tailwind, базовый лейаут в темной эстетике, рабочая сборка без ошибок. | [01_project_scaffolding.md](file:///Users/aleksandrtopilskii/Documents/projects/gtgTracker/plan/01_project_scaffolding.md) | ⏳ План |
+| **01** | **Scaffolding & Core Architecture** | Инициализация Vite + React + TS + Tailwind, базовый лейаут в темной эстетике, рабочая сборка без ошибок. | [01_project_scaffolding.md](file:///Users/aleksandrtopilskii/Documents/projects/gtgTracker/plan/01_project_scaffolding.md) | ✅ Выполнено |
 | **02** | **Data Layer & Immutability** | Local-first хранилище, JSON-схема тренировочной программы (`program.json`), изоляция истории от изменений плана через снапшоты. | [02_data_layer_and_models.md](file:///Users/aleksandrtopilskii/Documents/projects/gtgTracker/plan/02_data_layer_and_models.md) | ⏳ План |
 | **03** | **Core Dashboard & Set Logging** | Главный экран без скролла (100dvh): переключатель дней, карточки упражнений, быстрая фиксация `+1 подход` с тактильным откликом. | [03_core_dashboard.md](file:///Users/aleksandrtopilskii/Documents/projects/gtgTracker/plan/03_core_dashboard.md) | ⏳ План |
 | **04** | **Rest Timer & Muscle Readiness** | Таймер времени с последнего подхода с переходом в статус готовности (>45–60 мин) и визуальным изменением состояний. | [04_rest_timer.md](file:///Users/aleksandrtopilskii/Documents/projects/gtgTracker/plan/04_rest_timer.md) | ⏳ План |
