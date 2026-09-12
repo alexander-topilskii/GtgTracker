@@ -1,12 +1,18 @@
 {
-  "name": "${PROJECT_NAME}",
+  "name": "gtgTracker",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.45.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tailwind-merge": "^3.6.0"
+  },
   "devDependencies": {
     "typescript": "^5.5.3"
   },
