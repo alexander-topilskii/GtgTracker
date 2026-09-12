@@ -2,9 +2,15 @@ import { useState } from 'react';
 import { AppContainer } from './components/layout/AppContainer';
 import { Header } from './components/layout/Header';
 import { BottomNav, type TabType } from './components/layout/BottomNav';
-import { Dumbbell, Calendar, Settings } from 'lucide-react';
+import { SettingsView } from './components/settings/SettingsView';
+import { DashboardView } from './components/dashboard/DashboardView';
+import { HistoryView } from './components/history/HistoryView';
 
-export function App() {
+import { WorkoutProvider } from './context/WorkoutContext';
+
+import { InstallBanner } from './components/pwa/InstallBanner';
+
+export function AppContent() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
 
   return (
@@ -12,54 +18,29 @@ export function App() {
       {/* Шапка приложения */}
       <Header />
 
+      {/* Баннер установки PWA */}
+      <InstallBanner />
+
       {/* Основная рабочая область (без вертикального скролла на дашборде) */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
-        {activeTab === 'dashboard' && (
-          <div className="flex-1 flex flex-col justify-center items-center p-6 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 glow-emerald">
-              <Dumbbell className="w-8 h-8" />
-            </div>
-            <h2 className="text-xl font-bold tracking-tight text-white font-sans mb-1">
-              GtG Dashboard
-            </h2>
-            <p className="text-xs text-zinc-400 max-w-xs font-mono">
-              Минималистичный трекер микротренировок Grease the Groove готов к работе
-            </p>
-          </div>
-        )}
+        {activeTab === 'dashboard' && <DashboardView />}
 
-        {activeTab === 'history' && (
-          <div className="flex-1 flex flex-col justify-center items-center p-6 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4 glow-cyan">
-              <Calendar className="w-8 h-8" />
-            </div>
-            <h2 className="text-xl font-bold tracking-tight text-white font-sans mb-1">
-              История тренировок
-            </h2>
-            <p className="text-xs text-zinc-400 max-w-xs font-mono">
-              Календарь закрытых дней и аналитика объема (Этап 06)
-            </p>
-          </div>
-        )}
+        {activeTab === 'history' && <HistoryView />}
 
-        {activeTab === 'settings' && (
-          <div className="flex-1 flex flex-col justify-center items-center p-6 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-300 mb-4">
-              <Settings className="w-8 h-8" />
-            </div>
-            <h2 className="text-xl font-bold tracking-tight text-white font-sans mb-1">
-              Настройки программы
-            </h2>
-            <p className="text-xs text-zinc-400 max-w-xs font-mono">
-              JSON-редактор тренировочного плана и бэкапы (Этап 07)
-            </p>
-          </div>
-        )}
+        {activeTab === 'settings' && <SettingsView />}
       </div>
 
       {/* Нижняя навигация */}
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </AppContainer>
+  );
+}
+
+export function App() {
+  return (
+    <WorkoutProvider>
+      <AppContent />
+    </WorkoutProvider>
   );
 }
 

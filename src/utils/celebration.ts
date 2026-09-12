@@ -1,0 +1,65 @@
+import confetti from 'canvas-confetti';
+
+// Неоновый микро-взрыв искр при закрытии упражнения (5/5 подходов)
+export function triggerNeonBurst(originX: number = 0.5, originY: number = 0.5) {
+  try {
+    confetti({
+      particleCount: 35,
+      spread: 60,
+      startVelocity: 25,
+      origin: { x: originX, y: originY },
+      colors: ['#10b981', '#06b6d4', '#34d399', '#38bdf8'],
+      ticks: 120,
+      gravity: 1.2,
+      scalar: 0.7,
+      disableForReducedMotion: true,
+    });
+  } catch {
+    // Игнорируем ошибки confetti
+  }
+}
+
+// Празднование завершения всех упражнений за день
+export function triggerDayCompletedCelebration() {
+  try {
+    const count = 200;
+    const defaults = {
+      origin: { y: 0.7 },
+      colors: ['#10b981', '#06b6d4', '#f59e0b', '#10b981'],
+      disableForReducedMotion: true,
+    };
+
+    function fire(particleRatio: number, opts: confetti.Options) {
+      confetti({
+        ...defaults,
+        ...opts,
+        particleCount: Math.floor(count * particleRatio),
+      });
+    }
+
+    fire(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+    fire(0.2, {
+      spread: 60,
+    });
+    fire(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  } catch {
+    // Игнорируем
+  }
+}

@@ -9,3 +9,6 @@ yarn-error.log*
 .pnp.js
 
 .vscode/*
+# Build outputs
+dist/
+.DS_Store

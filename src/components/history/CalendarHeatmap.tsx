@@ -1,0 +1,155 @@
+import React, { useState } from 'react';
+import { useWorkout } from '../../context/WorkoutContext';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { formatToDateKey } from '../../utils/dateUtils';
+import { haptic } from '../../utils/haptics';
+
+interface CalendarHeatmapProps {
+  selectedDate: string;
+  onSelectDate: (date: string) => void;
+}
+
+export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
+  selectedDate,
+  onSelectDate,
+}) => {
+  const { history, program, settings } = useWorkout();
+
+  // Текущий отображаемый месяц и год
+  const [currentMonth, setCurrentMonth] = useState<Date>(() => new Date());
+
+  const year = currentMonth.getFullYear();
+  const month = currentMonth.getMonth();
+
+  const handlePrevMonth = () => {
+    haptic.trigger('light', settings.soundFeedbackEnabled);
+    setCurrentMonth(new Date(year, month - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    haptic.trigger('light', settings.soundFeedbackEnabled);
+    setCurrentMonth(new Date(year, month + 1, 1));
+  };
+
+  const monthTitle = new Intl.DateTimeFormat('ru-RU', {
+    month: 'long',
+    year: 'numeric',
+  }).format(currentMonth);
+
+  // Дни в месяце
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7; // Понедельник = 0
+
+  const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  const weekDayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+
+  const todayKey = formatToDateKey(new Date());
+
+  return (
+    <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
+      {/* Шапка календаря */}
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-bold text-white font-sans capitalize">
+          {monthTitle}
+        </h3>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handlePrevMonth}
+            className="w-7 h-7 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 flex items-center justify-center text-zinc-300 transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleNextMonth}
+            className="w-7 h-7 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 flex items-center justify-center text-zinc-300 transition-colors"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Дни недели */}
+      <div className="grid grid-cols-7 gap-1 text-center mb-1">
+        {weekDayNames.map((d) => (
+          <div key={d} className="text-[10px] font-mono text-zinc-400 py-1">
+            {d}
+          </div>
+        ))}
+      </div>
+
+      {/* Сетка дней */}
+      <div className="grid grid-cols-7 gap-1">
+        {/* Пустые ячейки до первого дня */}
+        {Array.from({ length: firstDayIndex }).map((_, i) => (
+          <div key={`empty-${i}`} className="h-9" />
+        ))}
+
+        {daysArray.map((dayNum) => {
+          const dateObj = new Date(year, month, dayNum);
+          const dateKey = formatToDateKey(dateObj);
+          const record = history[dateKey];
+          const isSelected = selectedDate === dateKey;
+          const isToday = todayKey === dateKey;
+
+          // Статус дня: зеленый (выполнен план), желтый (частично), серый (отдых/нет)
+          let statusDot = null;
+
+          if (record && record.completedSets && record.completedSets.length > 0) {
+            const plan = program.days[record.dayType] || program.days['A'];
+            const targetTotalSets = plan ? plan.exercises.reduce((a, e) => a + e.targetSets, 0) : 10;
+            const isFull = record.completedSets.length >= targetTotalSets;
+
+            if (isFull) {
+              statusDot = <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 glow-emerald" />;
+            } else {
+              statusDot = <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.7)]" />;
+            }
+          } else if (record && record.dayType === 'REST') {
+            statusDot = <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />;
+          }
+
+          return (
+            <button
+              key={dateKey}
+              type="button"
+              onClick={() => {
+                haptic.trigger('light', settings.soundFeedbackEnabled);
+                onSelectDate(dateKey);
+              }}
+              className={`h-9 rounded-xl flex flex-col items-center justify-center relative transition-all active:scale-95 ${
+                isSelected
+                  ? 'bg-zinc-800 text-white font-bold border border-white/20 shadow-md'
+                  : isToday
+                  ? 'bg-zinc-800/40 text-emerald-400 font-semibold border border-emerald-500/30'
+                  : 'text-zinc-300 hover:bg-zinc-800/40'
+              }`}
+            >
+              <span className="text-xs font-mono leading-none">{dayNum}</span>
+              <div className="h-2 flex items-center justify-center mt-0.5">
+                {statusDot}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Легенда */}
+      <div className="flex items-center justify-center gap-4 mt-3 pt-2.5 border-t border-white/[0.06] text-[10px] font-mono text-zinc-400">
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 glow-emerald" />
+          <span>План закрыт</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+          <span>Частично</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
+          <span>Отдых</span>
+        </div>
+      </div>
+    </div>
+  );
+};

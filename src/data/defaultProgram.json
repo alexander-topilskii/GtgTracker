@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "name": "Grease the Groove — Стандартный сплит (Верх / Руки-Плечи-Ноги)",
+  "defaultRestIntervalMinutes": 60,
+  "days": {
+    "A": {
+      "dayType": "A",
+      "title": "День А — Верх (База)",
+      "description": "Подтягивания, брусья и пресс",
+      "exercises": [
+        {
+          "id": "pull-ups",
+          "name": "Подтягивания (Pull-ups)",
+          "targetSets": 5,
+          "defaultReps": 5
+        },
+        {
+          "id": "dips",
+          "name": "Отжимания на брусьях (Dips)",
+          "targetSets": 5,
+          "defaultReps": 8
+        },
+        {
+          "id": "leg-raises",
+          "name": "Подъем ног к перекладине",
+          "targetSets": 4,
+          "defaultReps": 8
+        }
+      ]
+    },
+    "B": {
+      "dayType": "B",
+      "title": "День Б — Руки, Плечи, Ноги",
+      "description": "Гантели и приседания",
+      "exercises": [
+        {
+          "id": "bicep-curls",
+          "name": "Подъем гантелей на бицепс",
+          "targetSets": 4,
+          "defaultReps": 10,
+          "weight": 12
+        },
+        {
+          "id": "lateral-raises",
+          "name": "Махи с гантелями в стороны",
+          "targetSets": 4,
+          "defaultReps": 12,
+          "weight": 8
+        },
+        {
+          "id": "squats",
+          "name": "Приседания / Болгарские сплит",
+          "targetSets": 5,
+          "defaultReps": 15
+        }
+      ]
+    },
+    "REST": {
+      "dayType": "REST",
+      "title": "День отдыха",
+      "description": "Полное восстановление ЦНС и связок",
+      "exercises": []
+    }
+  }
+}
