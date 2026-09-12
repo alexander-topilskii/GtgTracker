@@ -1,5 +1,9 @@
 # ТЗ: Веб-приложение «GtG Tracker» (PWA)
 
+
+- https://alexander-topilskii.github.io/GtgTracker/
+
+
 Минималистичный мобильный PWA-трекер для распределенных микротренировок по методологии Grease the Groove (GtG).
 
 > 📋 **Поэтапный план разработки и дорожная карта проекта:** [plan/README.md](file:///Users/aleksandrtopilskii/Documents/projects/gtgTracker/plan/README.md)
