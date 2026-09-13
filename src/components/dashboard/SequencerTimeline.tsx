@@ -87,23 +87,24 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
   };
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col gap-1.5 overflow-hidden">
+    <div className="precision-card p-3 sm:p-3.5 flex-1 min-h-0 flex flex-col overflow-hidden shadow-2xl">
       {/* Шапка секвенсора */}
-      <div className="flex items-center justify-between px-1 shrink-0">
-        <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 flex items-center gap-2">
-          <span>СЕКВЕНСОР ДНЯ</span>
-          <span className="text-zinc-700">•</span>
-          <span className="text-[#ccff00] font-bold">
+      <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/[0.10] shrink-0">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
+            СЕКВЕНСОР ДНЯ
+          </span>
+          <span className="text-[10px] font-mono text-zinc-300 font-bold">
             {completedCount} ИЗ {totalTasks}
           </span>
         </div>
-        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+        <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
           ТАП ДЛЯ ОТМЕТКИ
         </span>
       </div>
 
       {/* Список подходов в прецизионном контейнере */}
-      <div className="precision-card p-2 flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-1.5">
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-1.5">
         {slotsMeta.map((item) => {
           return (
             <div
@@ -111,10 +112,10 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
               onClick={(e) => handleSlotClick(item, e)}
               className={`flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-150 cursor-pointer active:scale-98 ${
                 item.isCurrent
-                  ? 'bg-[#ccff00]/10 border border-[#ccff00]/40 text-white shadow-sm'
+                  ? 'bg-[#ccff00]/[0.08] border-2 border-[#ccff00]/60 text-white shadow-[0_0_16px_rgba(204,255,0,0.12)]'
                   : item.isDone
-                  ? 'bg-zinc-950/40 text-zinc-500 border border-transparent'
-                  : 'hover:bg-white/[0.03] text-zinc-300 border border-white/[0.03]'
+                  ? 'bg-[#090b11]/70 text-zinc-500 border border-white/[0.05] opacity-75'
+                  : 'bg-[#10131d]/90 hover:bg-[#161a28] text-zinc-200 border border-white/[0.09] hover:border-white/[0.16] shadow-sm'
               }`}
             >
               {/* Левая часть: номер/галочка + упражнение и группа мышц */}
@@ -122,10 +123,10 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
                 <span
                   className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold shrink-0 transition-all ${
                     item.isDone
-                      ? 'bg-[#ccff00] text-zinc-950 shadow-[0_0_10px_rgba(204,255,0,0.4)]'
+                      ? 'bg-[#ccff00] text-zinc-950 font-black shadow-[0_0_10px_rgba(204,255,0,0.35)]'
                       : item.isCurrent
-                      ? 'bg-[#ccff00]/20 text-[#ccff00] border border-[#ccff00]/40'
-                      : 'bg-zinc-800 text-zinc-400'
+                      ? 'bg-[#ccff00] text-zinc-950 font-black shadow-[0_0_12px_rgba(204,255,0,0.45)]'
+                      : 'bg-[#191f2e] text-zinc-300 border border-white/[0.10]'
                   }`}
                 >
                   {item.isDone ? '✓' : item.idx + 1}
@@ -134,12 +135,12 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
                 <div className="flex flex-col min-w-0">
                   <span
                     className={`text-xs font-semibold truncate ${
-                      item.isDone ? 'line-through text-zinc-500' : 'text-zinc-200'
+                      item.isDone ? 'line-through text-zinc-500' : 'text-zinc-100'
                     }`}
                   >
                     {item.slot.exerciseName}
                   </span>
-                  <span className="text-[9px] font-mono text-zinc-500 uppercase truncate">
+                  <span className="text-[9px] font-mono text-zinc-400 uppercase truncate">
                     ⏰ {item.slot.time} {item.slot.code ? `• ${item.slot.code}` : ''} {item.slot.muscle ? `· ${item.slot.muscle}` : ''}
                   </span>
                 </div>
@@ -153,10 +154,12 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
                   </span>
                 )}
                 <span
-                  className={`font-bold px-2 py-0.5 rounded-md ${
+                  className={`font-bold px-2 py-0.5 rounded-md text-xs font-mono ${
                     item.isCurrent
-                      ? 'bg-[#ccff00] text-zinc-950 font-black'
-                      : 'text-zinc-400 bg-white/[0.04]'
+                      ? 'bg-[#ccff00] text-zinc-950 font-black shadow-[0_0_8px_rgba(204,255,0,0.3)]'
+                      : item.isDone
+                      ? 'text-zinc-500 bg-white/[0.03] border border-white/[0.04]'
+                      : 'text-zinc-300 bg-white/[0.06] border border-white/[0.08]'
                   }`}
                 >
                   ×{item.slot.reps}

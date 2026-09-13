@@ -24,21 +24,21 @@ export const HistoryView: React.FC = () => {
       />
 
       {/* 2. Детализация выбранного дня */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
-        <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/[0.06]">
+      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl">
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/[0.08]">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-[#ccff00]" />
             <h4 className="text-sm font-bold text-white font-sans">
               {formatFriendlyDate(selectedDate)}
               {isToday && (
-                <span className="ml-2 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/30">
+                <span className="ml-2 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/30 font-bold">
                   Сегодня
                 </span>
               )}
             </h4>
           </div>
 
-          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-white/5">
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#1b2030] text-zinc-300 border border-white/[0.10] font-medium">
             {selectedRecord?.dayType
               ? selectedRecord.dayType === 'REST'
                 ? 'День отдыха'
@@ -72,7 +72,7 @@ export const HistoryView: React.FC = () => {
               return (
                 <div
                   key={set.id}
-                  className="p-2.5 rounded-xl bg-zinc-900/70 border border-white/5 flex items-center justify-between"
+                  className="p-2.5 rounded-xl bg-[#0e111a] border border-white/[0.08] flex items-center justify-between shadow-sm"
                 >
                   <div className="flex items-center gap-2.5">
                     <span className="w-5 h-5 rounded-full bg-[#ccff00]/10 text-[#ccff00] text-[10px] font-mono font-bold flex items-center justify-center border border-[#ccff00]/25">
