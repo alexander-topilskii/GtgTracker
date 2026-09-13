@@ -219,18 +219,13 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
 
   return (
     <div className="precision-card p-4 sm:p-5 transition-all duration-300 shadow-2xl">
-      {/* Телеметрия: номер подхода, группа мышц, время отдыха */}
+      {/* Телеметрия: номер подхода, время отдыха */}
       <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.10]">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
-            {isAllCompleted
-              ? 'ПЛАН ВЫПОЛНЕН'
-              : `ПОДХОД ${String(currentIndex + 1).padStart(2, '0')} / ${String(totalTasks).padStart(2, '0')}`}
-          </span>
-          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-wider font-semibold truncate max-w-[130px]">
-            {currentSlot?.muscle || (isAllCompleted ? 'ОТЛИЧНАЯ РАБОТА' : 'БАЗОВОЕ ДВИЖЕНИЕ')}
-          </span>
-        </div>
+        <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
+          {isAllCompleted
+            ? 'ПЛАН ВЫПОЛНЕН'
+            : `ПОДХОД ${String(currentIndex + 1).padStart(2, '0')} / ${String(totalTasks).padStart(2, '0')}`}
+        </span>
 
         <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] font-mono text-xs">
           <span className="text-zinc-400 text-[10px] uppercase tracking-wider">Отдых:</span>
@@ -240,15 +235,8 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
 
       {/* Фокус на текущем упражнении и нормативе */}
       <div className="my-3">
-        <div className="flex items-center justify-between">
-          <div className="text-[9px] text-zinc-400 uppercase tracking-[0.2em] mb-0.5 font-mono font-bold">
-            {isAllCompleted ? 'СТАТУС ТРЕНИРОВКИ' : 'ТЕКУЩЕЕ ДВИЖЕНИЕ'}
-          </div>
-          {currentSlot && (
-            <span className="text-[10px] font-mono text-[#ccff00] font-bold bg-[#ccff00]/10 border border-[#ccff00]/25 px-2 py-0.5 rounded-md">
-              ⏰ {currentSlot.time}
-            </span>
-          )}
+        <div className="text-[9px] text-zinc-400 uppercase tracking-[0.2em] mb-0.5 font-mono font-bold">
+          {isAllCompleted ? 'СТАТУС ТРЕНИРОВКИ' : 'ТЕКУЩЕЕ ДВИЖЕНИЕ'}
         </div>
 
         <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase leading-tight font-sans mt-0.5">

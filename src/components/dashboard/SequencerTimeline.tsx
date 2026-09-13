@@ -35,16 +35,6 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
     const completed = exerciseCounts[slot.exerciseId] || 0;
     const isDone = currIndex < completed;
 
-    // Находим связанный ExerciseLogItem для отображения точного времени выполнения
-    let loggedTimeString = '';
-    if (isDone) {
-      const setsOfThisEx = activeRecord.completedSets.filter((s) => s.exerciseId === slot.exerciseId);
-      if (setsOfThisEx[currIndex]) {
-        const d = new Date(setsOfThisEx[currIndex].timestamp);
-        loggedTimeString = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      }
-    }
-
     let isCurrent = false;
     if (!isDone && !currentNextFound) {
       isCurrent = true;
@@ -56,10 +46,6 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
       idx,
       isDone,
       isCurrent,
-      loggedTimeString,
-      matchingSetId: isDone
-        ? activeRecord.completedSets.filter((s) => s.exerciseId === slot.exerciseId)[currIndex]?.id
-        : undefined,
     };
   });
 
@@ -110,7 +96,7 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
             <div
               key={item.slot.id}
               onClick={(e) => handleSlotClick(item, e)}
-              className={`flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-150 cursor-pointer active:scale-98 ${
+              className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-150 cursor-pointer active:scale-98 ${
                 item.isCurrent
                   ? 'bg-[#ccff00]/[0.08] border-2 border-[#ccff00]/60 text-white shadow-[0_0_16px_rgba(204,255,0,0.12)]'
                   : item.isDone
@@ -118,8 +104,8 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
                   : 'bg-[#10131d]/90 hover:bg-[#161a28] text-zinc-200 border border-white/[0.09] hover:border-white/[0.16] shadow-sm'
               }`}
             >
-              {/* Левая часть: номер/галочка + упражнение и группа мышц */}
-              <div className="flex items-center gap-2.5 min-w-0">
+              {/* Левая часть: номер в порядке и название упражнения */}
+              <div className="flex items-center gap-3 min-w-0">
                 <span
                   className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold shrink-0 transition-all ${
                     item.isDone
@@ -132,29 +118,19 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
                   {item.isDone ? '✓' : item.idx + 1}
                 </span>
 
-                <div className="flex flex-col min-w-0">
-                  <span
-                    className={`text-xs font-semibold truncate ${
-                      item.isDone ? 'line-through text-zinc-500' : 'text-zinc-100'
-                    }`}
-                  >
-                    {item.slot.exerciseName}
-                  </span>
-                  <span className="text-[9px] font-mono text-zinc-400 uppercase truncate">
-                    ⏰ {item.slot.time} {item.slot.code ? `• ${item.slot.code}` : ''} {item.slot.muscle ? `· ${item.slot.muscle}` : ''}
-                  </span>
-                </div>
+                <span
+                  className={`text-xs sm:text-sm font-semibold truncate ${
+                    item.isDone ? 'line-through text-zinc-500' : 'text-zinc-100'
+                  }`}
+                >
+                  {item.slot.exerciseName}
+                </span>
               </div>
 
-              {/* Правая часть: время выполнения (если готово) и бейдж повторений */}
-              <div className="flex items-center gap-2 text-[11px] font-mono shrink-0 ml-2">
-                {item.isDone && item.loggedTimeString && (
-                  <span className="text-[10px] text-zinc-500 font-mono">
-                    {item.loggedTimeString}
-                  </span>
-                )}
+              {/* Правая часть: бейдж повторений */}
+              <div className="shrink-0 ml-2">
                 <span
-                  className={`font-bold px-2 py-0.5 rounded-md text-xs font-mono ${
+                  className={`font-bold px-2.5 py-0.5 rounded-md text-xs font-mono ${
                     item.isCurrent
                       ? 'bg-[#ccff00] text-zinc-950 font-black shadow-[0_0_8px_rgba(204,255,0,0.3)]'
                       : item.isDone
