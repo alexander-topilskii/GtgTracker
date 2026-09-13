@@ -92,7 +92,7 @@ export const ProgramVisualEditor: React.FC = () => {
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            {d === 'A' ? 'План дня А (Верх)' : 'План дня Б (Руки/Ноги)'}
+            {d === 'A' ? 'План дня А (Верх и Руки)' : 'План дня Б (Низ, Плечи, Кор)'}
           </button>
         ))}
       </div>

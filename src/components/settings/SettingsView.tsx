@@ -153,8 +153,8 @@ export const SettingsView: React.FC = () => {
 
         <div className="grid grid-cols-3 gap-1.5 pt-1">
           {([
-            { type: 'A', label: 'День А', desc: 'Верх (База)' },
-            { type: 'B', label: 'День Б', desc: 'Руки & Ноги' },
+            { type: 'A', label: 'День А', desc: 'Верх и Руки' },
+            { type: 'B', label: 'День Б', desc: 'Низ, Плечи, Кор' },
             { type: 'REST', label: 'Отдых', desc: 'Пауза' },
           ] as const).map((opt) => {
             const isActive = activeRecord.dayType === opt.type;

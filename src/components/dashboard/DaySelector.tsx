@@ -13,8 +13,8 @@ export const DaySelector: React.FC = () => {
   };
 
   const options: { type: DayType; label: string; short: string }[] = [
-    { type: 'A', label: 'День А', short: 'Верх (База)' },
-    { type: 'B', label: 'День Б', short: 'Руки & Ноги' },
+    { type: 'A', label: 'День А', short: 'Верх и Руки' },
+    { type: 'B', label: 'День Б', short: 'Низ, Плечи, Кор' },
     { type: 'REST', label: 'Отдых', short: 'Пауза' },
   ];
 

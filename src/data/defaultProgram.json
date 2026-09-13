@@ -1,112 +1,110 @@
 {
-  "version": 3,
+  "version": 4,
   "name": "GtG Kinetic — Расписание по времени",
   "defaultRestIntervalMinutes": 60,
   "days": {
     "A": {
       "dayType": "A",
-      "title": "День А — Верх (База)",
-      "description": "Подтягивания, брусья и пресс",
+      "title": "День А — Верх и Руки",
+      "description": "Подтягивания, брусья и гантели на бицепс",
       "exercises": [
         {
           "id": "pull-ups",
           "name": "Подтягивания",
           "targetSets": 3,
-          "defaultReps": 10,
+          "defaultReps": 11,
           "muscle": "Спина & Бицепс",
           "code": "PULL",
           "cue": "2–3 сек опускание • чистый подъем",
-          "timeSlots": ["10:00", "14:30", "17:30"]
+          "timeSlots": ["10:00", "14:30", "18:30"]
         },
         {
           "id": "dips",
-          "name": "Отжимания на брусьях",
+          "name": "Брусья",
           "targetSets": 3,
-          "defaultReps": 10,
+          "defaultReps": 15,
           "muscle": "Грудь & Трицепс",
           "code": "DIPS",
           "cue": "Угол 90° в локтях • наклон корпуса",
-          "timeSlots": ["11:30", "16:00", "18:30"]
+          "timeSlots": ["11:30", "16:00", "19:30"]
         },
         {
-          "id": "leg-raises",
-          "name": "Подъем ног",
+          "id": "bicep-curls",
+          "name": "Гантели на бицепс",
           "targetSets": 2,
-          "defaultReps": 10,
-          "muscle": "Прямая мышца кора",
-          "code": "CORE",
-          "cue": "Без раскачки • фиксация вверху",
-          "timeSlots": ["13:00", "19:30"]
+          "defaultReps": 15,
+          "muscle": "Бицепс",
+          "code": "BICEP",
+          "cue": "Супинация кисти • локти прижаты",
+          "timeSlots": ["13:00", "17:30"]
         }
       ],
       "schedule": [
-        { "id": "a_1", "time": "10:00", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 10, "muscle": "Спина & Бицепс", "code": "PULL", "cue": "2–3 сек опускание • чистый подъем" },
-        { "id": "a_2", "time": "11:30", "exerciseId": "dips", "exerciseName": "Отжимания на брусьях", "reps": 10, "muscle": "Грудь & Трицепс", "code": "DIPS", "cue": "Угол 90° в локтях • наклон корпуса" },
-        { "id": "a_3", "time": "13:00", "exerciseId": "leg-raises", "exerciseName": "Подъем ног", "reps": 10, "muscle": "Прямая мышца кора", "code": "CORE", "cue": "Без раскачки • фиксация вверху" },
-        { "id": "a_4", "time": "14:30", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 10, "muscle": "Спина & Бицепс", "code": "PULL", "cue": "Хват чуть шире плеч • грудь к перекладине" },
-        { "id": "a_5", "time": "16:00", "exerciseId": "dips", "exerciseName": "Отжимания на брусьях", "reps": 10, "muscle": "Грудь & Трицепс", "code": "DIPS", "cue": "Плавный контроль опускания" },
-        { "id": "a_6", "time": "17:30", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 10, "muscle": "Спина & Бицепс", "code": "PULL", "cue": "Свежие волокна • резкий подъем" },
-        { "id": "a_7", "time": "18:30", "exerciseId": "dips", "exerciseName": "Отжимания на брусьях", "reps": 10, "muscle": "Грудь & Трицепс", "code": "DIPS", "cue": "Мощный жим • локти не разводить" },
-        { "id": "a_8", "time": "19:30", "exerciseId": "leg-raises", "exerciseName": "Подъем ног", "reps": 10, "muscle": "Прямая мышца кора", "code": "CORE", "cue": "Полный выдох в верхней точке" }
+        { "id": "a_1", "time": "10:00", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 11, "muscle": "Спина & Бицепс", "code": "PULL", "cue": "2–3 сек опускание • чистый подъем" },
+        { "id": "a_2", "time": "11:30", "exerciseId": "dips", "exerciseName": "Брусья", "reps": 15, "muscle": "Грудь & Трицепс", "code": "DIPS", "cue": "Угол 90° в локтях • наклон корпуса" },
+        { "id": "a_3", "time": "13:00", "exerciseId": "bicep-curls", "exerciseName": "Гантели на бицепс", "reps": 15, "muscle": "Бицепс", "code": "BICEP", "cue": "Супинация кисти • локти прижаты" },
+        { "id": "a_4", "time": "14:30", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 11, "muscle": "Спина & Бицепс", "code": "PULL", "cue": "Хват чуть шире плеч • грудь к перекладине" },
+        { "id": "a_5", "time": "16:00", "exerciseId": "dips", "exerciseName": "Брусья", "reps": 15, "muscle": "Грудь & Трицепс", "code": "DIPS", "cue": "Плавный контроль опускания" },
+        { "id": "a_6", "time": "17:30", "exerciseId": "bicep-curls", "exerciseName": "Гантели на бицепс", "reps": 15, "muscle": "Бицепс", "code": "BICEP", "cue": "Чистый подъем без раскачки корпуса" },
+        { "id": "a_7", "time": "18:30", "exerciseId": "pull-ups", "exerciseName": "Подтягивания", "reps": 11, "muscle": "Спина & Бицепс", "code": "PULL", "cue": "Свежие волокна • мощный подъем" },
+        { "id": "a_8", "time": "19:30", "exerciseId": "dips", "exerciseName": "Брусья", "reps": 15, "muscle": "Грудь & Трицепс", "code": "DIPS", "cue": "Мощный жим • локти не разводить" }
       ]
     },
     "B": {
       "dayType": "B",
-      "title": "День Б — Ноги, Плечи, Руки",
-      "description": "Приседания, махи и бицепс",
+      "title": "День Б — Низ, Плечи, Кор",
+      "description": "Приседы на 1 ноге, наклоны, махи и пресс",
       "exercises": [
         {
-          "id": "squats",
-          "name": "Приседания",
+          "id": "single-leg-squats",
+          "name": "Приседы на 1 ноге",
           "targetSets": 2,
           "defaultReps": 15,
-          "muscle": "Квадрицепс & Ягодицы",
+          "muscle": "Ноги & Ягодицы",
           "code": "LEGS",
-          "cue": "Колени наружу • спина прямая",
-          "timeSlots": ["10:00", "14:30"]
+          "cue": "Баланс и контроль • ровная спина",
+          "timeSlots": ["10:00", "16:00"]
+        },
+        {
+          "id": "good-mornings",
+          "name": "Наклоны",
+          "targetSets": 2,
+          "defaultReps": 15,
+          "muscle": "Бицепс бедра & Поясница",
+          "code": "BACK",
+          "cue": "Движение в тазобедренном суставе • прямая спина",
+          "timeSlots": ["11:30", "17:30"]
         },
         {
           "id": "lateral-raises",
-          "name": "Махи в стороны",
-          "targetSets": 1,
+          "name": "Махи гантелями в стороны",
+          "targetSets": 2,
           "defaultReps": 10,
-          "weight": 8,
           "muscle": "Средняя дельта",
           "code": "DELTS",
-          "cue": "Гантели параллельно полу",
-          "timeSlots": ["11:30"]
+          "cue": "Гантели параллельно полу • локти слегка согнуты",
+          "timeSlots": ["13:00", "18:30"]
         },
         {
-          "id": "bicep-curls",
-          "name": "Подъем гантелей на бицепс",
+          "id": "abs",
+          "name": "Пресс",
           "targetSets": 2,
           "defaultReps": 10,
-          "weight": 12,
-          "muscle": "Бицепс & Брахиалис",
-          "code": "BICEP",
-          "cue": "Супинация кисти • локти прижаты",
-          "timeSlots": ["13:00", "17:30"]
-        },
-        {
-          "id": "front-raises",
-          "name": "Махи перед собой",
-          "targetSets": 2,
-          "defaultReps": 10,
-          "weight": 8,
-          "muscle": "Передняя дельта",
-          "code": "DELTS",
-          "cue": "Сведение лопаток • осанка",
-          "timeSlots": ["16:00", "19:00"]
+          "muscle": "Кор & Пресс",
+          "code": "CORE",
+          "cue": "Скручивание на выдохе • напряжение пресса",
+          "timeSlots": ["14:30", "19:30"]
         }
       ],
       "schedule": [
-        { "id": "b_1", "time": "10:00", "exerciseId": "squats", "exerciseName": "Приседания", "reps": 15, "muscle": "Квадрицепс & Ягодицы", "code": "LEGS", "cue": "Колени наружу • спина прямая" },
-        { "id": "b_2", "time": "11:30", "exerciseId": "lateral-raises", "exerciseName": "Махи в стороны", "reps": 10, "weight": 8, "muscle": "Средняя дельта", "code": "DELTS", "cue": "Гантели параллельно полу" },
-        { "id": "b_3", "time": "13:00", "exerciseId": "bicep-curls", "exerciseName": "Подъем гантелей на бицепс", "reps": 10, "weight": 12, "muscle": "Бицепс & Брахиалис", "code": "BICEP", "cue": "Супинация кисти • локти прижаты" },
-        { "id": "b_4", "time": "14:30", "exerciseId": "squats", "exerciseName": "Приседания", "reps": 15, "muscle": "Квадрицепс & Ягодицы", "code": "LEGS", "cue": "Плавный темп дыхания" },
-        { "id": "b_5", "time": "16:00", "exerciseId": "front-raises", "exerciseName": "Махи перед собой", "reps": 10, "weight": 8, "muscle": "Передняя дельта", "code": "DELTS", "cue": "Сведение лопаток • осанка" },
-        { "id": "b_6", "time": "17:30", "exerciseId": "bicep-curls", "exerciseName": "Подъем гантелей на бицепс", "reps": 10, "weight": 12, "muscle": "Бицепс & Брахиалис", "code": "BICEP", "cue": "Чистый финальный подход" },
-        { "id": "b_7", "time": "19:00", "exerciseId": "front-raises", "exerciseName": "Махи перед собой", "reps": 10, "weight": 8, "muscle": "Передняя дельта", "code": "DELTS", "cue": "Плавное опускание веса" }
+        { "id": "b_1", "time": "10:00", "exerciseId": "single-leg-squats", "exerciseName": "Приседы на 1 ноге", "reps": 15, "muscle": "Ноги & Ягодицы", "code": "LEGS", "cue": "Баланс и контроль • ровная спина" },
+        { "id": "b_2", "time": "11:30", "exerciseId": "good-mornings", "exerciseName": "Наклоны", "reps": 15, "muscle": "Бицепс бедра & Поясница", "code": "BACK", "cue": "Движение в тазобедренном суставе • прямая спина" },
+        { "id": "b_3", "time": "13:00", "exerciseId": "lateral-raises", "exerciseName": "Махи гантелями в стороны", "reps": 10, "muscle": "Средняя дельта", "code": "DELTS", "cue": "Гантели параллельно полу • локти слегка согнуты" },
+        { "id": "b_4", "time": "14:30", "exerciseId": "abs", "exerciseName": "Пресс", "reps": 10, "muscle": "Кор & Пресс", "code": "CORE", "cue": "Скручивание на выдохе • напряжение пресса" },
+        { "id": "b_5", "time": "16:00", "exerciseId": "single-leg-squats", "exerciseName": "Приседы на 1 ноге", "reps": 15, "muscle": "Ноги & Ягодицы", "code": "LEGS", "cue": "Плавный темп • колено строго вперед" },
+        { "id": "b_6", "time": "17:30", "exerciseId": "good-mornings", "exerciseName": "Наклоны", "reps": 15, "muscle": "Бицепс бедра & Поясница", "code": "BACK", "cue": "Растяжение задней поверхности бедра" },
+        { "id": "b_7", "time": "18:30", "exerciseId": "lateral-raises", "exerciseName": "Махи гантелями в стороны", "reps": 10, "muscle": "Средняя дельта", "code": "DELTS", "cue": "Контроль в верхней точке без читинга" },
+        { "id": "b_8", "time": "19:30", "exerciseId": "abs", "exerciseName": "Пресс", "reps": 10, "muscle": "Кор & Пресс", "code": "CORE", "cue": "Полный выдох в пиковом сокращении" }
       ]
     },
     "REST": {
