@@ -16,7 +16,6 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
   }
 
   const schedule = activeDayPlan.schedule;
-  const totalTasks = schedule.length;
 
   // Подсчет подходов по каждому упражнению
   const exerciseCounts: Record<string, number> = {};
@@ -49,8 +48,6 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
     };
   });
 
-  const completedCount = slotsMeta.filter((s) => s.isDone).length;
-
   const handleSlotClick = (
     item: (typeof slotsMeta)[number],
     e: React.MouseEvent<HTMLDivElement>
@@ -73,22 +70,7 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
   };
 
   return (
-    <div className="precision-card p-3 sm:p-3.5 flex-1 min-h-0 flex flex-col overflow-hidden shadow-2xl">
-      {/* Шапка секвенсора */}
-      <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/[0.10] shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
-            СЕКВЕНСОР ДНЯ
-          </span>
-          <span className="text-[10px] font-mono text-zinc-300 font-bold">
-            {completedCount} ИЗ {totalTasks}
-          </span>
-        </div>
-        <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
-          ТАП ДЛЯ ОТМЕТКИ
-        </span>
-      </div>
-
+    <div className="precision-card p-2.5 sm:p-3 flex-1 min-h-0 flex flex-col overflow-hidden shadow-2xl">
       {/* Список подходов в прецизионном контейнере */}
       <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-1.5">
         {slotsMeta.map((item) => {
