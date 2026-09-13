@@ -50,7 +50,7 @@ export const VolumeTracker: React.FC = () => {
   }, [history, periodDays]);
 
   return (
-    <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl">
+    <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
       {/* Заголовок и переключатель периода */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export const VolumeTracker: React.FC = () => {
           </h3>
         </div>
 
-        <div className="flex items-center p-0.5 rounded-lg bg-[#0e111a] border border-white/[0.08] text-[11px] font-mono">
+        <div className="flex items-center p-0.5 rounded-lg bg-zinc-900 border border-white/5 text-[11px] font-mono">
           <button
             type="button"
             onClick={() => setPeriodDays(7)}
@@ -90,13 +90,13 @@ export const VolumeTracker: React.FC = () => {
 
       {/* Общие счетчики */}
       <div className="grid grid-cols-2 gap-2 mb-4">
-        <div className="p-3 rounded-xl bg-[#0e111a] border border-white/[0.08]">
+        <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
           <div className="text-[10px] font-mono text-zinc-400 uppercase">Всего повторений</div>
           <div className="text-xl font-bold font-mono text-[#ccff00] mt-0.5">
             {stats.totalRepsAll}
           </div>
         </div>
-        <div className="p-3 rounded-xl bg-[#0e111a] border border-white/[0.08]">
+        <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
           <div className="text-[10px] font-mono text-zinc-400 uppercase">Всего подходов</div>
           <div className="text-xl font-bold font-mono text-cyan-400 mt-0.5">
             {stats.totalSetsAll}

@@ -209,7 +209,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
   return (
     <div className="precision-card p-4 sm:p-5 transition-all duration-300 shadow-2xl">
       {/* Телеметрия: номер подхода, время отдыха / таймер */}
-      <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.10]">
+      <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
         <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
           {isAllCompleted
             ? 'ПЛАН ВЫПОЛНЕН'
@@ -234,35 +234,35 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
 
       {/* Фокус на текущем упражнении и нормативе */}
       <div className="my-3">
-        <div className="text-[9px] text-zinc-400 uppercase tracking-[0.2em] mb-0.5 font-mono font-bold">
+        <div className="text-[9px] text-zinc-500 uppercase tracking-[0.2em] mb-0.5 font-mono font-bold">
           {isAllCompleted ? 'СТАТУС ТРЕНИРОВКИ' : 'ТЕКУЩЕЕ ДВИЖЕНИЕ'}
         </div>
 
-        <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase leading-tight font-sans mt-0.5">
+        <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase leading-tight font-sans">
           {isAllCompleted ? 'ВСЕ ПОДХОДЫ ЗАКРЫТЫ' : (currentSlot?.exerciseName || 'Упражнение')}
         </h2>
 
         {/* Блок повторений и инструкции */}
-        <div className="mt-2.5 flex items-center justify-between bg-[#090b12] rounded-2xl p-3 sm:p-3.5 border border-white/[0.11] shadow-[inset_0_2px_6px_rgba(0,0,0,0.65)]">
-          <div className="flex items-baseline gap-1.5 pr-2">
-            <span className="text-3xl sm:text-4xl font-black font-mono tracking-tighter text-[#ccff00] leading-none text-glow-neon">
+        <div className="mt-2.5 flex items-center justify-between bg-black/40 rounded-2xl p-3 border border-white/[0.04]">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-3xl sm:text-4xl font-black font-mono tracking-tighter text-[#ccff00] leading-none">
               {isAllCompleted ? '100%' : (currentSlot?.reps ?? 10)}
             </span>
             <span className="text-xs font-mono text-zinc-400 font-bold uppercase tracking-wider">
               {isAllCompleted ? '' : 'повт.'}
             </span>
             {currentSlot?.weight ? (
-              <span className="text-xs font-mono text-zinc-300 ml-1 font-bold px-1.5 py-0.5 rounded bg-white/[0.07] border border-white/[0.08]">
-                {currentSlot.weight} кг
+              <span className="text-xs font-mono text-zinc-400 ml-1 font-semibold">
+                • {currentSlot.weight} кг
               </span>
             ) : null}
           </div>
 
-          <div className="text-right max-w-[55%] border-l border-white/[0.08] pl-3">
-            <div className="text-[9px] font-mono uppercase text-zinc-400 tracking-wider font-semibold">
+          <div className="text-right max-w-[55%]">
+            <div className="text-[9px] font-mono uppercase text-zinc-500 tracking-wider">
               {isAllCompleted ? 'Итог дня' : 'Инструкция'}
             </div>
-            <div className="text-[11px] text-zinc-300 font-medium leading-snug line-clamp-2 mt-0.5">
+            <div className="text-[11px] text-zinc-300 font-medium leading-snug line-clamp-2">
               {isAllCompleted
                 ? 'Суммарный объем дня набран чисто и без переутомления.'
                 : (currentSlot?.cue || 'Контроль движения • чистое исполнение')}
@@ -272,7 +272,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
       </div>
 
       {/* Тактильный магнитный слайдер "Сдвиг для отметки" */}
-      <div className="mt-3 pt-2.5 border-t border-white/[0.10]">
+      <div className="mt-3 pt-2.5 border-t border-white/[0.06]">
         {isAllCompleted ? (
           <button
             type="button"
@@ -310,7 +310,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
               />
 
               {/* Фоновая надпись с подсказкой */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-xs font-mono font-bold tracking-widest text-zinc-300 uppercase gap-2">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-xs font-mono font-bold tracking-widest text-zinc-400 uppercase gap-2">
                 <span>СДВИНЬТЕ ВПРАВО</span>
                 <ChevronRight className="w-4 h-4 text-[#ccff00] animate-pulse" />
               </div>

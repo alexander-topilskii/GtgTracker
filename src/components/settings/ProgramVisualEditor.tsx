@@ -202,7 +202,7 @@ export const ProgramVisualEditor: React.FC = () => {
           return (
             <div
               key={ex.id}
-              className="p-3 rounded-xl bg-[#0e111a] border border-white/[0.08] flex items-center justify-between shadow-sm"
+              className="p-3 rounded-xl bg-zinc-900/80 border border-white/5 flex items-center justify-between"
             >
               <div>
                 <div className="text-xs font-bold text-white font-sans">

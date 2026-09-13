@@ -46,7 +46,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
   const todayKey = formatToDateKey(new Date());
 
   return (
-    <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl">
+    <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
       {/* Шапка календаря */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-bold text-white font-sans capitalize">

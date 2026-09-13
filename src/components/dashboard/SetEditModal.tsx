@@ -51,7 +51,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
     <BottomSheet isOpen={isOpen} onClose={onClose} title={exercise.name}>
       <div className="space-y-5">
         {/* Блок настройки повторений для нового подхода */}
-        <div className="p-4 rounded-2xl bg-[#0e111a] border border-white/[0.10] shadow-md">
+        <div className="p-4 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
           <div className="text-xs font-mono text-zinc-400 mb-3 uppercase tracking-wider">
             Записать подход с ручными параметрами
           </div>
@@ -128,7 +128,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
                 return (
                   <div
                     key={set.id}
-                    className="p-3 rounded-xl bg-[#0e111a] border border-white/[0.08] flex items-center justify-between shadow-sm"
+                    className="p-3 rounded-xl bg-zinc-900/90 border border-white/[0.06] flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="w-6 h-6 rounded-full bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/30 text-xs font-mono flex items-center justify-center font-bold">

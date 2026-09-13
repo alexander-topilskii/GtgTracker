@@ -138,7 +138,7 @@ export const SettingsView: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-5">
       {/* 1. Текущий тренировочный день */}
-      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl space-y-2.5">
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-[#ccff00]" />
@@ -169,7 +169,7 @@ export const SettingsView: React.FC = () => {
                 className={`py-2 px-2 rounded-xl text-center transition-all ${
                   isActive
                     ? 'bg-[#ccff00] text-black font-bold shadow-md shadow-[#ccff00]/25'
-                    : 'bg-[#0e111a] text-zinc-300 hover:bg-[#161a28] border border-white/[0.08]'
+                    : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-white/5'
                 }`}
               >
                 <div className="text-xs font-sans font-bold">{opt.label}</div>
@@ -187,7 +187,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* 2. Настройка программы тренировок */}
-      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl">
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-white font-sans">
             План упражнений
@@ -209,7 +209,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* 2. Настройка таймера отдыха */}
-      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl">
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
         <div className="flex items-center gap-2 mb-2">
           <Timer className="w-4 h-4 text-cyan-400" />
           <h3 className="text-sm font-bold text-white font-sans">
@@ -232,7 +232,7 @@ export const SettingsView: React.FC = () => {
               className={`py-2 rounded-xl text-xs font-mono font-bold transition-all ${
                 settings.restIntervalMinutes === mins
                   ? 'bg-[#ccff00] text-black shadow-lg shadow-[#ccff00]/25'
-                  : 'bg-[#0e111a] text-zinc-300 hover:bg-[#161a28] border border-white/[0.08]'
+                  : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-white/5'
               }`}
             >
               {mins} м
@@ -242,7 +242,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* 3. Уведомления о готовности к подходу */}
-      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl space-y-3">
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bell className="w-4 h-4 text-[#ccff00]" />
@@ -317,7 +317,7 @@ export const SettingsView: React.FC = () => {
             <button
               type="button"
               onClick={handleSendTestNotification}
-              className="px-3 py-1.5 rounded-lg bg-[#0e111a] hover:bg-[#161a28] text-[#ccff00] text-xs font-mono font-medium border border-white/[0.08] active:scale-95 transition-all flex items-center gap-1.5 shadow-sm"
+              className="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-[#ccff00] text-xs font-mono font-medium border border-white/5 active:scale-95 transition-all flex items-center gap-1.5"
             >
               <Send className="w-3 h-3" />
               Отправить тест
@@ -336,7 +336,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* 4. Тактильный и звуковой отклик */}
-      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl space-y-3">
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
         <h3 className="text-sm font-bold text-white font-sans mb-1">
           Тактильный отклик и звук
         </h3>
@@ -416,7 +416,7 @@ export const SettingsView: React.FC = () => {
       <InstallBlock />
 
       {/* 5. Бэкап и сброс */}
-      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl space-y-3">
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
         <h3 className="text-sm font-bold text-white font-sans mb-1">
           Резервное копирование и данные
         </h3>

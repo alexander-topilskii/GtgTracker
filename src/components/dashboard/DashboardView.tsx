@@ -8,8 +8,8 @@ export const DashboardView: React.FC = () => {
   const [selectedExercise, setSelectedExercise] = useState<ExerciseConfig | null>(null);
 
   return (
-    <div className="flex-1 flex flex-col justify-between min-h-0 overflow-hidden px-3.5 pt-2.5 pb-2 gap-3">
-      {/* Верх: Секвенсор всех заданий на сегодня */}
+    <div className="flex-1 flex flex-col justify-between min-h-0 overflow-hidden px-3.5 pt-2 pb-1.5 gap-2">
+      {/* Верх: Секвенсор всех заданий на сегодня (заполняет все верхнее пространство без пробелов) */}
       <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
         <SequencerTimeline onOpenModal={setSelectedExercise} />
       </main>
