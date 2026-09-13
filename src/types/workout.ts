@@ -1,4 +1,32 @@
-export type DayType = 'A' | 'B' | 'REST' | string;
+export type DayType = 'A' | 'B' | 'REST' | 'DELOAD' | 'TEST_PULLUPS' | 'TEST_DIPS' | string;
+
+export interface CycleTestHistoryItem {
+  cycle: number;
+  date: string;
+  oldPullUps: number;
+  newPullUps: number;
+  oldDips: number;
+  newDips: number;
+  pullUpsWorking: number;
+  dipsWorking: number;
+}
+
+export interface CycleState {
+  currentCycle: number; // 1, 2, ...
+  startDate: string; // YYYY-MM-DD (понедельник недели 1)
+  manualWeekOverride?: number | null; // 1..4 (для тестирования или ручного сдвига)
+  baseMaxes: {
+    pullUps: number; // Стартовый рекорд (например, 22 или 20)
+    dips: number;    // Стартовый рекорд (например, 30)
+  };
+  testResults?: {
+    pullUps?: number;
+    dips?: number;
+    pullUpsTestedAt?: string;
+    dipsTestedAt?: string;
+  };
+  testHistory?: CycleTestHistoryItem[];
+}
 
 export interface ScheduleSlot {
   id: string;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useWorkout } from '../../context/WorkoutContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatToDateKey } from '../../utils/dateUtils';
+import { getCycleWeekInfo } from '../../utils/cycleManager';
 import { haptic } from '../../utils/haptics';
 
 interface CalendarHeatmapProps {
@@ -13,7 +14,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
   selectedDate,
   onSelectDate,
 }) => {
-  const { history, program, settings } = useWorkout();
+  const { history, program, settings, cycleState } = useWorkout();
 
   // Текущий отображаемый месяц и год
   const [currentMonth, setCurrentMonth] = useState<Date>(() => new Date());
@@ -92,13 +93,15 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
           const record = history[dateKey];
           const isSelected = selectedDate === dateKey;
           const isToday = todayKey === dateKey;
+          const weekInfo = getCycleWeekInfo(dateKey, cycleState);
+          const isWeek4TestDay = weekInfo.isDeloadWeek && (weekInfo.dayOfWeek === 4 || weekInfo.dayOfWeek === 6);
 
           // Статус дня: неон/желтый (выполнен план), янтарный (частично), серый (отдых/нет)
           let statusDot = null;
 
           if (record && record.completedSets && record.completedSets.length > 0) {
             const plan = program.days[record.dayType] || program.days['A'];
-            const totalRequired = plan.exercises.reduce((acc, ex) => acc + ex.targetSets, 0);
+            const totalRequired = plan?.exercises?.reduce((acc, ex) => acc + ex.targetSets, 0) || 1;
             const totalDone = record.completedSets.length;
 
             if (totalDone >= totalRequired) {
@@ -108,6 +111,8 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
             }
           } else if (record && record.dayType === 'REST') {
             statusDot = <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />;
+          } else if (isWeek4TestDay) {
+            statusDot = <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_6px_rgba(34,211,238,0.8)]" />;
           }
 
           return (
@@ -136,7 +141,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
       </div>
 
       {/* Легенда */}
-      <div className="flex items-center justify-center gap-4 mt-3 pt-2.5 border-t border-white/[0.06] text-[10px] font-mono text-zinc-400">
+      <div className="flex flex-wrap items-center justify-center gap-3 mt-3 pt-2.5 border-t border-white/[0.06] text-[10px] font-mono text-zinc-400">
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] glow-neon" />
           <span>План закрыт</span>
@@ -144,6 +149,10 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
           <span>Частично</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+          <span>Тест (Н4)</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />

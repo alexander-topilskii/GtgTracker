@@ -9,8 +9,11 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
-  const { activeRecord, settings, updateSettings, lastSetTimestamp } = useWorkout();
-  const { formattedRemaining, isExpired } = useRestTimer(lastSetTimestamp, settings.restIntervalMinutes);
+  const { activeRecord, settings, updateSettings, lastSetTimestamp, weekInfo } = useWorkout();
+  const { formattedRemaining, isExpired } = useRestTimer(
+    lastSetTimestamp,
+    settings.restIntervalMinutes
+  );
 
   const dateText = React.useMemo(() => {
     const now = new Date();
@@ -21,9 +24,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
     }).format(now).toUpperCase();
   }, []);
 
-  const dayBadgeText = React.useMemo(() => {
-    if (activeRecord.dayType === 'REST') return 'ОТДЫХ';
-    return `ДЕНЬ ${activeRecord.dayType}`;
+  const dayBadgeInfo = React.useMemo(() => {
+    switch (activeRecord.dayType) {
+      case 'REST':
+        return { text: 'ОТДЫХ', color: 'bg-white/[0.08] text-zinc-300 border-white/[0.12]' };
+      case 'DELOAD':
+        return { text: 'ДЕЛОАД', color: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30' };
+      case 'TEST_PULLUPS':
+        return { text: 'ТЕСТ: ПОДТЯГИВАНИЯ', color: 'bg-[#ccff00]/20 text-[#ccff00] border-[#ccff00]/40 font-black' };
+      case 'TEST_DIPS':
+        return { text: 'ТЕСТ: БРУСЬЯ', color: 'bg-[#ccff00]/20 text-[#ccff00] border-[#ccff00]/40 font-black' };
+      default:
+        return { text: `ДЕНЬ ${activeRecord.dayType}`, color: 'bg-white/[0.08] text-zinc-200 border-white/[0.12]' };
+    }
   }, [activeRecord.dayType]);
 
   const handleToggleSound = () => {
@@ -42,8 +55,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
           <h1 className="text-xs font-black tracking-[0.2em] text-white uppercase font-mono">
             GTG · KINETIC
           </h1>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/[0.12] text-zinc-200 font-bold uppercase tracking-wider">
-            {dayBadgeText}
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.10] text-zinc-400 font-bold uppercase">
+            НЕДЕЛЯ {weekInfo.weekNumber}/4
+          </span>
+          <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${dayBadgeInfo.color}`}>
+            {dayBadgeInfo.text}
           </span>
         </div>
 

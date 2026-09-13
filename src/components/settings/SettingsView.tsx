@@ -17,6 +17,9 @@ import {
   BellRing,
   Send,
   AlertCircle,
+  Trophy,
+  Minus,
+  Plus,
 } from 'lucide-react';
 import { haptic } from '../../utils/haptics';
 import { InstallBlock } from '../pwa/InstallBanner';
@@ -28,7 +31,17 @@ import {
 } from '../../utils/notifications';
 
 export const SettingsView: React.FC = () => {
-  const { settings, updateSettings, refreshData, activeRecord, switchDayType } = useWorkout();
+  const {
+    settings,
+    updateSettings,
+    refreshData,
+    activeRecord,
+    switchDayType,
+    cycleState,
+    updateCycleState,
+    weekInfo,
+    applyCycleRecalculation,
+  } = useWorkout();
   const [isJsonModalOpen, setIsJsonModalOpen] = useState<boolean>(false);
   const [backupNotice, setBackupNotice] = useState<string | null>(null);
   const [permissionState, setPermissionState] = useState<NotificationPermission | 'unsupported'>(() =>
@@ -186,7 +199,194 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Настройка программы тренировок */}
+      {/* 2. 4-недельный цикл и тестирование */}
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40 space-y-3.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-[#ccff00]" />
+            <h3 className="text-sm font-bold text-white font-sans">
+              4-недельный цикл и тесты
+            </h3>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ccff00]/15 border border-[#ccff00]/30 text-[#ccff00] font-bold">
+            Цикл {cycleState.currentCycle} · Неделя {weekInfo.weekNumber}/4
+          </span>
+        </div>
+
+        <p className="text-xs text-zinc-400 font-mono leading-relaxed">
+          Недели 1-3: базовая работа 50% от рекордов. Неделя 4: Делоад (Пн-Ср) и тестирование максимума: Четверг — Подтягивания, Суббота — Брусья.
+        </p>
+
+        {/* Переключатель недели */}
+        <div className="space-y-1.5 pt-1">
+          <div className="text-[11px] font-mono text-zinc-300 font-bold uppercase tracking-wider flex items-center justify-between">
+            <span>Неделя цикла:</span>
+            {cycleState.manualWeekOverride ? (
+              <span className="text-[10px] text-amber-400 font-mono lowercase">ручной выбор</span>
+            ) : (
+              <span className="text-[10px] text-[#ccff00] font-mono lowercase">авто-отсчет</span>
+            )}
+          </div>
+          <div className="grid grid-cols-5 gap-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                haptic.trigger('light', settings.soundFeedbackEnabled);
+                updateCycleState({ manualWeekOverride: null });
+              }}
+              className={`py-2 px-1 rounded-xl text-center text-xs font-mono font-bold transition-all ${
+                cycleState.manualWeekOverride === null || cycleState.manualWeekOverride === undefined
+                  ? 'bg-[#ccff00] text-black shadow-md shadow-[#ccff00]/25'
+                  : 'bg-[#1a1f2c] text-zinc-300 hover:bg-[#222838] border border-white/[0.08]'
+              }`}
+            >
+              Авто
+            </button>
+            {[1, 2, 3, 4].map((w) => {
+              const isSelected = cycleState.manualWeekOverride === w || (cycleState.manualWeekOverride == null && weekInfo.weekNumber === w);
+              const isDeload = w === 4;
+              return (
+                <button
+                  key={w}
+                  type="button"
+                  onClick={() => {
+                    haptic.trigger('light', settings.soundFeedbackEnabled);
+                    updateCycleState({ manualWeekOverride: w });
+                  }}
+                  className={`py-2 px-1 rounded-xl text-center text-xs font-mono font-bold transition-all ${
+                    isSelected
+                      ? isDeload
+                        ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/25'
+                        : 'bg-[#ccff00] text-black shadow-md shadow-[#ccff00]/25'
+                      : 'bg-[#1a1f2c] text-zinc-300 hover:bg-[#222838] border border-white/[0.08]'
+                  }`}
+                >
+                  {w} {isDeload ? '🔥' : 'нед'}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Базовые максимумы для расчета нормативов */}
+        <div className="pt-2 border-t border-white/[0.06] space-y-2">
+          <div className="text-[11px] font-mono text-zinc-300 font-bold uppercase tracking-wider">
+            Базовые максимумы (1ПМ):
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {/* Подтягивания */}
+            <div className="p-2.5 rounded-xl bg-[#1a1f2c] border border-white/[0.08] space-y-1.5">
+              <div className="text-[11px] font-sans font-bold text-white">Подтягивания</div>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    haptic.trigger('light', settings.soundFeedbackEnabled);
+                    const newPull = Math.max(1, cycleState.baseMaxes.pullUps - 1);
+                    updateCycleState({
+                      baseMaxes: { ...cycleState.baseMaxes, pullUps: newPull },
+                    });
+                  }}
+                  className="w-7 h-7 rounded-lg bg-[#222838] hover:bg-[#2b3347] active:scale-95 text-white flex items-center justify-center text-xs"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+
+                <div className="text-center">
+                  <div className="text-sm font-mono font-bold text-[#ccff00]">
+                    {cycleState.baseMaxes.pullUps} повт.
+                  </div>
+                  <div className="text-[9px] font-mono text-zinc-400">
+                    50% = {Math.round(cycleState.baseMaxes.pullUps * 0.5)} повт.
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    haptic.trigger('light', settings.soundFeedbackEnabled);
+                    const newPull = cycleState.baseMaxes.pullUps + 1;
+                    updateCycleState({
+                      baseMaxes: { ...cycleState.baseMaxes, pullUps: newPull },
+                    });
+                  }}
+                  className="w-7 h-7 rounded-lg bg-[#222838] hover:bg-[#2b3347] active:scale-95 text-white flex items-center justify-center text-xs"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Брусья */}
+            <div className="p-2.5 rounded-xl bg-[#1a1f2c] border border-white/[0.08] space-y-1.5">
+              <div className="text-[11px] font-sans font-bold text-white">Брусья</div>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    haptic.trigger('light', settings.soundFeedbackEnabled);
+                    const newDips = Math.max(1, cycleState.baseMaxes.dips - 1);
+                    updateCycleState({
+                      baseMaxes: { ...cycleState.baseMaxes, dips: newDips },
+                    });
+                  }}
+                  className="w-7 h-7 rounded-lg bg-[#222838] hover:bg-[#2b3347] active:scale-95 text-white flex items-center justify-center text-xs"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+
+                <div className="text-center">
+                  <div className="text-sm font-mono font-bold text-[#ccff00]">
+                    {cycleState.baseMaxes.dips} повт.
+                  </div>
+                  <div className="text-[9px] font-mono text-zinc-400">
+                    50% = {Math.round(cycleState.baseMaxes.dips * 0.5)} повт.
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    haptic.trigger('light', settings.soundFeedbackEnabled);
+                    const newDips = cycleState.baseMaxes.dips + 1;
+                    updateCycleState({
+                      baseMaxes: { ...cycleState.baseMaxes, dips: newDips },
+                    });
+                  }}
+                  className="w-7 h-7 rounded-lg bg-[#222838] hover:bg-[#2b3347] active:scale-95 text-white flex items-center justify-center text-xs"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              haptic.trigger('success', settings.soundFeedbackEnabled);
+              applyCycleRecalculation(cycleState.baseMaxes.pullUps, cycleState.baseMaxes.dips);
+              alert('Нормативы программы пересчитаны на основе базовых максимумов!');
+            }}
+            className="w-full py-2 px-3 rounded-xl bg-[#1a1f2c] hover:bg-[#222838] text-[#ccff00] text-xs font-mono font-bold border border-white/[0.08] flex items-center justify-center gap-1.5 transition-all active:scale-98"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            Пересчитать программу по базам
+          </button>
+        </div>
+
+        {/* История рекордов / последние тесты */}
+        {cycleState.testResults && (cycleState.testResults.pullUps || cycleState.testResults.dips) && (
+          <div className="pt-2 border-t border-white/[0.06] text-xs font-mono text-zinc-300">
+            <span className="text-zinc-500">Результаты 4-й недели: </span>
+            {cycleState.testResults.pullUps ? `Подтягивания: ${cycleState.testResults.pullUps} повт. ` : ''}
+            {cycleState.testResults.dips ? `Брусья: ${cycleState.testResults.dips} повт.` : ''}
+          </div>
+        )}
+      </div>
+
+      {/* 3. Настройка программы тренировок */}
       <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-white font-sans">

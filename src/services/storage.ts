@@ -5,13 +5,16 @@ import {
   ExerciseLogItem,
   DayType,
   AppSettings,
+  CycleState,
 } from '../types/workout';
 import defaultProgramData from '../data/defaultProgram.json';
+import { DEFAULT_CYCLE_STATE } from '../utils/cycleManager';
 
 const STORAGE_KEYS = {
   PROGRAM: 'gtg_program_v1',
   HISTORY: 'gtg_history_v1',
   SETTINGS: 'gtg_settings_v1',
+  CYCLE: 'gtg_cycle_v1',
 } as const;
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -200,6 +203,22 @@ export function saveSettings(settings: AppSettings): void {
   safeStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
 }
 
+// Получение состояния 4-недельного цикла
+export function getCycleState(): CycleState {
+  const raw = safeStorage.getItem(STORAGE_KEYS.CYCLE);
+  if (!raw) return DEFAULT_CYCLE_STATE;
+  try {
+    return { ...DEFAULT_CYCLE_STATE, ...JSON.parse(raw) };
+  } catch {
+    return DEFAULT_CYCLE_STATE;
+  }
+}
+
+// Сохранение состояния 4-недельного цикла
+export function saveCycleState(cycleState: CycleState): void {
+  safeStorage.setItem(STORAGE_KEYS.CYCLE, JSON.stringify(cycleState));
+}
+
 // Полный экспорт бэкапа
 export interface BackupData {
   version: number;
@@ -207,6 +226,7 @@ export interface BackupData {
   program: WorkoutProgramConfig;
   history: Record<string, DayRecord>;
   settings: AppSettings;
+  cycle: CycleState;
 }
 
 export function exportBackup(): string {
@@ -216,6 +236,7 @@ export function exportBackup(): string {
     program: getProgram(),
     history: getHistory(),
     settings: getSettings(),
+    cycle: getCycleState(),
   };
   return JSON.stringify(backup, null, 2);
 }
@@ -227,6 +248,7 @@ export function importBackup(jsonString: string): boolean {
     if (data.program) saveProgram(data.program);
     if (data.history) saveHistory(data.history);
     if (data.settings) saveSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+    if (data.cycle) saveCycleState({ ...DEFAULT_CYCLE_STATE, ...data.cycle });
     return true;
   } catch (err) {
     console.error('Failed to import backup:', err);
@@ -239,4 +261,5 @@ export function resetAllData(): void {
   safeStorage.removeItem(STORAGE_KEYS.PROGRAM);
   safeStorage.removeItem(STORAGE_KEYS.HISTORY);
   safeStorage.removeItem(STORAGE_KEYS.SETTINGS);
+  safeStorage.removeItem(STORAGE_KEYS.CYCLE);
 }
