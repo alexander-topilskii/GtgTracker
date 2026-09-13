@@ -4,9 +4,9 @@
   --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --color-cyber-bg: #060709;
-  --color-cyber-card: #11141c;
-  --color-cyber-border: rgba(255, 255, 255, 0.07);
+  --color-cyber-bg: #141722;
+  --color-cyber-card: #121520;
+  --color-cyber-border: rgba(255, 255, 255, 0.10);
 
   --color-accent-neon: #ccff00;
   --color-accent-lime: #d9f99d;
@@ -28,7 +28,7 @@ html, body {
   height: 100dvh;
   margin: 0;
   padding: 0;
-  background-color: #060709;
+  background-color: #1a1f2b;
   color: #f4f4f5;
   touch-action: manipulation;
   overflow: hidden;
@@ -36,19 +36,19 @@ html, body {
   -webkit-user-select: none;
 }
 
-/* Ambient luxury dark gradient */
+/* Ambient luxury dark gradient — noticeably lighter, refined slate-grey */
 .ambient-bg {
-  background: radial-gradient(circle at 50% 0%, #151922 0%, #060709 65%);
+  background: radial-gradient(circle at 50% 0%, #464f61 0%, #323947 50%, #242a37 100%);
 }
 
-/* Anodized Precision Card with specular rim */
+/* Anodized Precision Card with specular rim and distinct elevated contrast */
 .precision-card {
-  background: linear-gradient(180deg, #11141c 0%, #0c0e14 100%);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(180deg, #131622 0%, #0d0f17 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 24px 48px -12px rgba(0, 0, 0, 0.9);
-  border-radius: 28px;
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 20px 38px -8px rgba(0, 0, 0, 0.55);
+  border-radius: 26px;
 }
 
 /* Tactile Magnetic Slider Track */

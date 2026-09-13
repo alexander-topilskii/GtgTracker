@@ -55,18 +55,17 @@ const FRAGMENT_SHADER_SRC = `
     float n2 = snoise(uv * 2.2 - vec2(t * 0.15, t * 0.2));
     float n = (n1 + n2) * 0.5;
 
-    vec3 baseBg = vec3(0.031, 0.035, 0.051); // #08090d
-    vec3 recoveryAura = vec3(0.04, 0.07, 0.14);
-    vec3 readyAura = vec3(0.06, 0.72, 0.51);
+    vec3 recoveryAura = vec3(0.08, 0.12, 0.22);
+    vec3 readyAura = vec3(0.10, 0.75, 0.55);
 
     float pulse = 0.85 + 0.15 * sin(u_time * 1.8);
     vec3 activeAura = mix(recoveryAura, readyAura * pulse, u_readiness);
 
-    float vignette = smoothstep(0.25, 0.9, dist);
+    float vignette = smoothstep(0.20, 0.85, dist);
     float auraIntensity = (vignette * 0.35 + n * 0.15) * (0.35 + 0.65 * u_readiness);
 
-    vec3 finalColor = mix(baseBg, activeAura, clamp(auraIntensity, 0.0, 0.45));
-    gl_FragColor = vec4(finalColor, 1.0);
+    float auraAlpha = clamp(auraIntensity * 0.45, 0.0, 0.35);
+    gl_FragColor = vec4(activeAura, auraAlpha);
   }
 `;
 

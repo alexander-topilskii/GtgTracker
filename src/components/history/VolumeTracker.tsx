@@ -50,7 +50,7 @@ export const VolumeTracker: React.FC = () => {
   }, [history, periodDays]);
 
   return (
-    <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
+    <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40">
       {/* Заголовок и переключатель периода */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -62,13 +62,13 @@ export const VolumeTracker: React.FC = () => {
           </h3>
         </div>
 
-        <div className="flex items-center p-0.5 rounded-lg bg-zinc-900 border border-white/5 text-[11px] font-mono">
+        <div className="flex items-center p-0.5 rounded-lg bg-[#0e1017] border border-white/[0.08] text-[11px] font-mono">
           <button
             type="button"
             onClick={() => setPeriodDays(7)}
             className={`px-2.5 py-1 rounded-md transition-colors ${
               periodDays === 7
-                ? 'bg-zinc-800 text-white font-semibold'
+                ? 'bg-[#1a1f2c] text-white font-semibold border border-white/[0.08]'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
@@ -79,7 +79,7 @@ export const VolumeTracker: React.FC = () => {
             onClick={() => setPeriodDays(30)}
             className={`px-2.5 py-1 rounded-md transition-colors ${
               periodDays === 30
-                ? 'bg-zinc-800 text-white font-semibold'
+                ? 'bg-[#1a1f2c] text-white font-semibold border border-white/[0.08]'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
@@ -90,13 +90,13 @@ export const VolumeTracker: React.FC = () => {
 
       {/* Общие счетчики */}
       <div className="grid grid-cols-2 gap-2 mb-4">
-        <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
+        <div className="p-3 rounded-xl bg-[#1a1f2c] border border-white/[0.08]">
           <div className="text-[10px] font-mono text-zinc-400 uppercase">Всего повторений</div>
           <div className="text-xl font-bold font-mono text-[#ccff00] mt-0.5">
             {stats.totalRepsAll}
           </div>
         </div>
-        <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
+        <div className="p-3 rounded-xl bg-[#1a1f2c] border border-white/[0.08]">
           <div className="text-[10px] font-mono text-zinc-400 uppercase">Всего подходов</div>
           <div className="text-xl font-bold font-mono text-cyan-400 mt-0.5">
             {stats.totalSetsAll}
@@ -106,7 +106,7 @@ export const VolumeTracker: React.FC = () => {
 
       {/* Список упражнений с прогресс-барами */}
       {stats.exercisesList.length === 0 ? (
-        <div className="p-4 text-center text-xs font-mono text-zinc-400">
+        <div className="p-4 rounded-xl bg-[#1a1f2c]/50 border border-white/[0.06] text-center text-xs font-mono text-zinc-400">
           За выбранный период тренировок не было
         </div>
       ) : (
@@ -122,7 +122,7 @@ export const VolumeTracker: React.FC = () => {
                     <strong className="text-white">{item.reps}</strong> повт. ({item.sets} сетов)
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-zinc-800/80 overflow-hidden border border-white/5">
+                <div className="h-2 rounded-full bg-[#1a1f2c] overflow-hidden border border-white/[0.08]">
                   <div
                     className="h-full bg-gradient-to-r from-[#ccff00] to-[#d9f99d] rounded-full transition-all duration-500"
                     style={{ width: `${barPercent}%` }}

@@ -46,7 +46,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
   const todayKey = formatToDateKey(new Date());
 
   return (
-    <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
+    <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40">
       {/* Шапка календаря */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-bold text-white font-sans capitalize">
@@ -56,14 +56,14 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
           <button
             type="button"
             onClick={handlePrevMonth}
-            className="w-7 h-7 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 flex items-center justify-center text-zinc-300 transition-colors"
+            className="w-7 h-7 rounded-lg bg-[#1a1f2c] hover:bg-[#222838] border border-white/[0.08] flex items-center justify-center text-zinc-300 transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             type="button"
             onClick={handleNextMonth}
-            className="w-7 h-7 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 flex items-center justify-center text-zinc-300 transition-colors"
+            className="w-7 h-7 rounded-lg bg-[#1a1f2c] hover:bg-[#222838] border border-white/[0.08] flex items-center justify-center text-zinc-300 transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -98,13 +98,13 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
 
           if (record && record.completedSets && record.completedSets.length > 0) {
             const plan = program.days[record.dayType] || program.days['A'];
-            const targetTotalSets = plan ? plan.exercises.reduce((a, e) => a + e.targetSets, 0) : 10;
-            const isFull = record.completedSets.length >= targetTotalSets;
+            const totalRequired = plan.exercises.reduce((acc, ex) => acc + ex.targetSets, 0);
+            const totalDone = record.completedSets.length;
 
-            if (isFull) {
+            if (totalDone >= totalRequired) {
               statusDot = <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] glow-neon" />;
             } else {
-              statusDot = <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.7)]" />;
+              statusDot = <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />;
             }
           } else if (record && record.dayType === 'REST') {
             statusDot = <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />;
@@ -120,10 +120,10 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
               }}
               className={`h-9 rounded-xl flex flex-col items-center justify-center relative transition-all active:scale-95 ${
                 isSelected
-                  ? 'bg-zinc-800 text-white font-bold border border-white/20 shadow-md'
+                  ? 'bg-[#22283a] text-white font-bold border border-white/20 shadow-md'
                   : isToday
-                  ? 'bg-zinc-800/40 text-[#ccff00] font-semibold border border-[#ccff00]/40'
-                  : 'text-zinc-300 hover:bg-zinc-800/40'
+                  ? 'bg-[#ccff00]/10 text-[#ccff00] font-semibold border border-[#ccff00]/40'
+                  : 'text-zinc-300 hover:bg-[#1a1f2c]/50'
               }`}
             >
               <span className="text-xs font-mono leading-none">{dayNum}</span>

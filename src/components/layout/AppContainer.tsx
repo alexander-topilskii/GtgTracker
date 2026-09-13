@@ -9,8 +9,8 @@ interface AppContainerProps {
 
 export const AppContainer: React.FC<AppContainerProps> = ({ children }) => {
   return (
-    <div className="w-full h-full h-[100dvh] flex justify-center bg-[#050608]">
-      <main className="w-full max-w-md h-full flex flex-col bg-[#060709] ambient-bg relative overflow-hidden shadow-2xl border-x border-white/[0.04]">
+    <div className="w-full h-full h-[100dvh] flex justify-center bg-[#181c26]">
+      <main className="w-full max-w-md h-full flex flex-col bg-[#242937] ambient-bg relative overflow-hidden shadow-2xl border-x border-white/[0.08]">
         {/* Микро-искры при завершении подходов */}
         <SparksCanvas />
 

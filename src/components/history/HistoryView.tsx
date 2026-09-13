@@ -24,7 +24,7 @@ export const HistoryView: React.FC = () => {
       />
 
       {/* 2. Детализация выбранного дня */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40">
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/[0.06]">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-[#ccff00]" />
@@ -38,7 +38,7 @@ export const HistoryView: React.FC = () => {
             </h4>
           </div>
 
-          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-white/5">
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#1a1f2c] text-zinc-300 border border-white/[0.08]">
             {selectedRecord?.dayType
               ? selectedRecord.dayType === 'REST'
                 ? 'День отдыха'
@@ -49,7 +49,7 @@ export const HistoryView: React.FC = () => {
 
         {/* Список выполненных подходов за выбранный день */}
         {!selectedRecord || selectedRecord.completedSets.length === 0 ? (
-          <div className="py-6 text-center text-xs font-mono text-zinc-400 flex flex-col items-center gap-1.5">
+          <div className="py-6 rounded-xl bg-[#1a1f2c]/50 border border-white/[0.06] text-center text-xs font-mono text-zinc-400 flex flex-col items-center gap-1.5">
             <CircleDashed className="w-6 h-6 text-zinc-500 stroke-[1.5]" />
             <span>В этот день тренировок не зафиксировано</span>
           </div>
@@ -72,7 +72,7 @@ export const HistoryView: React.FC = () => {
               return (
                 <div
                   key={set.id}
-                  className="p-2.5 rounded-xl bg-zinc-900/70 border border-white/5 flex items-center justify-between"
+                  className="p-2.5 rounded-xl bg-[#1a1f2c] border border-white/[0.08] flex items-center justify-between shadow-sm"
                 >
                   <div className="flex items-center gap-2.5">
                     <span className="w-5 h-5 rounded-full bg-[#ccff00]/10 text-[#ccff00] text-[10px] font-mono font-bold flex items-center justify-center border border-[#ccff00]/25">

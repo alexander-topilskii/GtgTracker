@@ -138,7 +138,7 @@ export const SettingsView: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-5">
       {/* 1. Текущий тренировочный день */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-2.5">
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40 space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-[#ccff00]" />
@@ -169,7 +169,7 @@ export const SettingsView: React.FC = () => {
                 className={`py-2 px-2 rounded-xl text-center transition-all ${
                   isActive
                     ? 'bg-[#ccff00] text-black font-bold shadow-md shadow-[#ccff00]/25'
-                    : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-white/5'
+                    : 'bg-[#1a1f2c] text-zinc-300 hover:bg-[#222838] border border-white/[0.08]'
                 }`}
               >
                 <div className="text-xs font-sans font-bold">{opt.label}</div>
@@ -187,7 +187,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* 2. Настройка программы тренировок */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-white font-sans">
             План упражнений
@@ -198,7 +198,7 @@ export const SettingsView: React.FC = () => {
               haptic.trigger('light', settings.soundFeedbackEnabled);
               setIsJsonModalOpen(true);
             }}
-            className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-[#ccff00] text-xs font-mono flex items-center gap-1.5 border border-white/5 transition-all"
+            className="px-2.5 py-1 rounded-lg bg-[#1a1f2c] hover:bg-[#222838] text-[#ccff00] text-xs font-mono flex items-center gap-1.5 border border-white/[0.08] transition-all"
           >
             <Code2 className="w-3.5 h-3.5" />
             JSON-код
@@ -208,8 +208,8 @@ export const SettingsView: React.FC = () => {
         <ProgramVisualEditor />
       </div>
 
-      {/* 2. Настройка таймера отдыха */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
+      {/* 3. Настройка таймера отдыха */}
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40">
         <div className="flex items-center gap-2 mb-2">
           <Timer className="w-4 h-4 text-cyan-400" />
           <h3 className="text-sm font-bold text-white font-sans">
@@ -232,7 +232,7 @@ export const SettingsView: React.FC = () => {
               className={`py-2 rounded-xl text-xs font-mono font-bold transition-all ${
                 settings.restIntervalMinutes === mins
                   ? 'bg-[#ccff00] text-black shadow-lg shadow-[#ccff00]/25'
-                  : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-white/5'
+                  : 'bg-[#1a1f2c] text-zinc-300 hover:bg-[#222838] border border-white/[0.08]'
               }`}
             >
               {mins} м
@@ -241,8 +241,8 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Уведомления о готовности к подходу */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
+      {/* 4. Уведомления о готовности к подходу */}
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bell className="w-4 h-4 text-[#ccff00]" />
@@ -256,7 +256,7 @@ export const SettingsView: React.FC = () => {
                 ? 'bg-[#ccff00]/15 text-[#ccff00] border-[#ccff00]/30'
                 : permissionState === 'denied'
                 ? 'bg-red-500/15 text-red-400 border-red-500/30'
-                : 'bg-zinc-800 text-zinc-400 border-white/5'
+                : 'bg-[#1a1f2c] text-zinc-400 border border-white/[0.08]'
             }`}
           >
             {permissionState === 'granted'
@@ -317,7 +317,7 @@ export const SettingsView: React.FC = () => {
             <button
               type="button"
               onClick={handleSendTestNotification}
-              className="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-[#ccff00] text-xs font-mono font-medium border border-white/5 active:scale-95 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-lg bg-[#1a1f2c] hover:bg-[#222838] text-[#ccff00] text-xs font-mono font-medium border border-white/[0.08] active:scale-95 transition-all flex items-center gap-1.5"
             >
               <Send className="w-3 h-3" />
               Отправить тест
@@ -335,8 +335,8 @@ export const SettingsView: React.FC = () => {
         )}
       </div>
 
-      {/* 4. Тактильный и звуковой отклик */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
+      {/* 5. Тактильный и звуковой отклик */}
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40 space-y-3">
         <h3 className="text-sm font-bold text-white font-sans mb-1">
           Тактильный отклик и звук
         </h3>
@@ -412,11 +412,11 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Установка как приложения (PWA) */}
+      {/* Установка как приложения (PWA) */}
       <InstallBlock />
 
-      {/* 5. Бэкап и сброс */}
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
+      {/* 6. Бэкап и сброс */}
+      <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-xl shadow-black/40 space-y-3">
         <h3 className="text-sm font-bold text-white font-sans mb-1">
           Резервное копирование и данные
         </h3>
@@ -432,13 +432,13 @@ export const SettingsView: React.FC = () => {
           <button
             type="button"
             onClick={handleExportBackup}
-            className="py-2.5 px-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-mono flex items-center justify-center gap-1.5 border border-white/5 transition-all active:scale-95"
+            className="py-2.5 px-3 rounded-xl bg-[#1a1f2c] hover:bg-[#222838] text-white text-xs font-mono flex items-center justify-center gap-1.5 border border-white/[0.08] transition-all active:scale-95"
           >
             <Download className="w-4 h-4 text-[#ccff00]" />
             Скачать бэкап
           </button>
 
-          <label className="py-2.5 px-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-mono flex items-center justify-center gap-1.5 border border-white/5 transition-all cursor-pointer active:scale-95">
+          <label className="py-2.5 px-3 rounded-xl bg-[#1a1f2c] hover:bg-[#222838] text-white text-xs font-mono flex items-center justify-center gap-1.5 border border-white/[0.08] transition-all cursor-pointer active:scale-95">
             <Upload className="w-4 h-4 text-cyan-400" />
             Восстановить
             <input
@@ -455,7 +455,7 @@ export const SettingsView: React.FC = () => {
           <button
             type="button"
             onClick={handleFactoryReset}
-            className="w-full py-2.5 px-3 rounded-xl bg-red-950/20 hover:bg-red-900/40 text-red-400 border border-red-500/20 text-xs font-mono flex items-center justify-center gap-1.5 transition-all active:scale-98"
+            className="w-full py-2.5 px-3 rounded-xl bg-red-950/25 hover:bg-red-900/40 text-red-400 border border-red-500/25 text-xs font-mono flex items-center justify-center gap-1.5 transition-all active:scale-98"
           >
             <AlertOctagon className="w-4 h-4" />
             Сбросить все данные

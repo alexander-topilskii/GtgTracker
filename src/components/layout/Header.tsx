@@ -35,14 +35,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
   };
 
   return (
-    <header className="w-full px-4 pt-3 pb-2 flex items-center justify-between border-b border-white/[0.06] bg-[#060709]/80 backdrop-blur-md z-30 shrink-0">
+    <header className="w-full px-4 pt-3 pb-2 flex items-center justify-between border-b border-white/[0.10] bg-[#181c28]/95 backdrop-blur-md z-30 shrink-0 shadow-sm">
       <div>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#ccff00] shadow-[0_0_8px_#ccff00]" />
           <h1 className="text-xs font-black tracking-[0.2em] text-white uppercase font-mono">
             GTG · KINETIC
           </h1>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 font-bold uppercase tracking-wider">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/[0.12] text-zinc-200 font-bold uppercase tracking-wider">
             {dayBadgeText}
           </span>
         </div>
@@ -70,13 +70,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
           type="button"
           onClick={handleToggleSound}
           aria-label="Звук"
-          className="w-9 h-9 rounded-2xl bg-zinc-900/80 border border-white/[0.08] flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95"
+          className="w-9 h-9 rounded-2xl bg-[#222738] border border-white/[0.12] hover:border-white/[0.22] flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
           title={settings.soundFeedbackEnabled ? 'Звук включен' : 'Звук выключен'}
         >
           {settings.soundFeedbackEnabled ? (
             <Volume2 className="w-4 h-4 text-[#ccff00]" />
           ) : (
-            <VolumeX className="w-4 h-4 text-zinc-600" />
+            <VolumeX className="w-4 h-4 text-zinc-500" />
           )}
         </button>
 
@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
             type="button"
             onClick={onOpenSettings}
             aria-label="Настройки"
-            className="w-9 h-9 rounded-2xl bg-zinc-900/80 border border-white/[0.08] flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95"
+            className="w-9 h-9 rounded-2xl bg-[#222738] border border-white/[0.12] hover:border-white/[0.22] flex items-center justify-center text-zinc-300 hover:text-white transition-all active:scale-95"
           >
             <Settings className="w-4 h-4" />
           </button>

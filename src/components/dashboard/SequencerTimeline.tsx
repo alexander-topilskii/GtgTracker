@@ -80,10 +80,10 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
               onClick={(e) => handleSlotClick(item, e)}
               className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-150 cursor-pointer active:scale-98 ${
                 item.isCurrent
-                  ? 'bg-[#ccff00]/10 border border-[#ccff00]/40 text-white shadow-sm'
+                  ? 'bg-[#ccff00]/12 border border-[#ccff00]/45 text-white shadow-sm shadow-[#ccff00]/10'
                   : item.isDone
-                  ? 'bg-zinc-950/40 text-zinc-500 border border-transparent'
-                  : 'hover:bg-white/[0.03] text-zinc-300 border border-white/[0.03]'
+                  ? 'bg-black/35 text-zinc-500 border border-transparent'
+                  : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 border border-white/[0.07]'
               }`}
             >
               {/* Левая часть: номер в порядке и название упражнения */}
@@ -94,7 +94,7 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
                       ? 'bg-[#ccff00] text-zinc-950 shadow-[0_0_10px_rgba(204,255,0,0.4)]'
                       : item.isCurrent
                       ? 'bg-[#ccff00]/20 text-[#ccff00] border border-[#ccff00]/40'
-                      : 'bg-zinc-800 text-zinc-400'
+                      : 'bg-[#1e2332] text-zinc-400 border border-white/[0.08]'
                   }`}
                 >
                   {item.isDone ? '✓' : item.idx + 1}
@@ -102,7 +102,7 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
 
                 <span
                   className={`text-xs sm:text-sm font-semibold truncate ${
-                    item.isDone ? 'line-through text-zinc-500' : 'text-zinc-200'
+                    item.isDone ? 'line-through text-zinc-500' : 'text-zinc-100'
                   }`}
                 >
                   {item.slot.exerciseName}
@@ -114,8 +114,8 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
                 <span
                   className={`font-bold px-2.5 py-0.5 rounded-md text-xs font-mono ${
                     item.isCurrent
-                      ? 'bg-[#ccff00] text-zinc-950 font-black'
-                      : 'text-zinc-400 bg-white/[0.04]'
+                      ? 'bg-[#ccff00] text-zinc-950 font-black shadow-sm'
+                      : 'text-zinc-300 bg-white/[0.06] border border-white/[0.06]'
                   }`}
                 >
                   ×{item.slot.reps}

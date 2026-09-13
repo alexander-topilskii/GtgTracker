@@ -36,12 +36,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       />
 
       {/* Выдвижная панель снизу */}
-      <div className="relative w-full max-w-md bg-[#12151f] border-t border-white/10 rounded-t-3xl p-5 shadow-2xl z-10 animate-slide-up max-h-[85vh] flex flex-col">
+      <div className="relative w-full max-w-md bg-[#151924] border-t border-white/15 rounded-t-3xl p-5 shadow-2xl z-10 animate-slide-up max-h-[85vh] flex flex-col">
         {/* Ручка шторки */}
         <div className="w-10 h-1 rounded-full bg-zinc-700 mx-auto mb-3 shrink-0" />
 
         {/* Заголовок */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] shrink-0">
+        <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] shrink-0">
           <h3 className="text-base font-bold text-white font-sans tracking-tight">
             {title}
           </h3>
