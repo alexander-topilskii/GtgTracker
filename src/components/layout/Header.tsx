@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Volume2, VolumeX, Settings } from 'lucide-react';
 import { useWorkout } from '../../context/WorkoutContext';
+import { useRestTimer } from '../../hooks/useRestTimer';
 import { haptic } from '../../utils/haptics';
 
 interface HeaderProps {
@@ -9,24 +10,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
   const { activeRecord, settings, updateSettings, lastSetTimestamp } = useWorkout();
-  const [elapsedMinutes, setElapsedMinutes] = useState<number>(() => {
-    if (!lastSetTimestamp) return 999;
-    return Math.floor((Date.now() - lastSetTimestamp) / 60000);
-  });
-
-  useEffect(() => {
-    const updateTimer = () => {
-      if (!lastSetTimestamp) {
-        setElapsedMinutes(999);
-        return;
-      }
-      setElapsedMinutes(Math.floor((Date.now() - lastSetTimestamp) / 60000));
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 10000);
-    return () => clearInterval(interval);
-  }, [lastSetTimestamp]);
+  const { formattedRemaining, isExpired } = useRestTimer(lastSetTimestamp, settings.restIntervalMinutes);
 
   const dateText = React.useMemo(() => {
     const now = new Date();
@@ -36,8 +20,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
       month: 'short',
     }).format(now).toUpperCase();
   }, []);
-
-  const isRecovered = !lastSetTimestamp || elapsedMinutes >= settings.restIntervalMinutes;
 
   const dayBadgeText = React.useMemo(() => {
     if (activeRecord.dayType === 'REST') return 'ОТДЫХ';
@@ -68,15 +50,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings }) => {
         <div className="text-[11px] font-mono text-zinc-400 mt-1 flex items-center gap-2">
           <span className="text-zinc-400 font-medium">{dateText}</span>
           <span className="text-zinc-700">/</span>
-          {isRecovered ? (
+          {isExpired ? (
             <span className="text-[#ccff00] font-semibold flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] animate-ping" />
-              100% свежесть
+              100% готовность
             </span>
           ) : (
             <span className="text-[#f59e0b] font-semibold flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]" />
-              отдых {elapsedMinutes}/{settings.restIntervalMinutes}м
+              таймер {formattedRemaining}
             </span>
           )}
         </div>

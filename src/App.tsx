@@ -7,9 +7,13 @@ import { DashboardView } from './components/dashboard/DashboardView';
 import { HistoryView } from './components/history/HistoryView';
 
 import { WorkoutProvider } from './context/WorkoutContext';
+import { useNotificationWatcher } from './hooks/useNotificationWatcher';
 
 export function AppContent() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+
+  // Фоновый мониторинг таймера отдыха и отправка уведомлений
+  useNotificationWatcher();
 
   return (
     <AppContainer>

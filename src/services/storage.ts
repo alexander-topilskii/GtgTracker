@@ -18,6 +18,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   restIntervalMinutes: 60,
   hapticFeedbackEnabled: true,
   soundFeedbackEnabled: false,
+  notificationsEnabled: false,
   theme: 'dark',
 };
 

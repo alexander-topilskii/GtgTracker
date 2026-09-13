@@ -62,5 +62,6 @@ export interface AppSettings {
   restIntervalMinutes: number;
   hapticFeedbackEnabled: boolean;
   soundFeedbackEnabled: boolean;
+  notificationsEnabled: boolean;
   theme: 'dark';
 }

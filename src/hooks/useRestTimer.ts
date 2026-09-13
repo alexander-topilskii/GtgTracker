@@ -4,9 +4,13 @@ export type ReadinessState = 'IDLE' | 'RECOVERY' | 'APPROACHING' | 'READY';
 
 export interface RestTimerData {
   elapsedSeconds: number;
+  remainingSeconds: number;
   formattedTime: string;
+  formattedRemaining: string;
   readinessState: ReadinessState;
   readinessPercent: number; // 0 to 100
+  isExpired: boolean;
+  targetTimestamp: number | null;
   statusText: string;
 }
 
@@ -45,20 +49,40 @@ export function useRestTimer(
     return `${minutes} мин.`;
   }, []);
 
+  const formatRemaining = useCallback((totalSeconds: number): string => {
+    if (totalSeconds <= 0) return '00:00';
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}ч ${String(minutes).padStart(2, '0')}м`;
+    }
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }, []);
+
   return useMemo<RestTimerData>(() => {
+    const targetSeconds = targetRestMinutes * 60;
+
     if (lastTimestamp === null) {
       return {
         elapsedSeconds: 0,
+        remainingSeconds: 0,
         formattedTime: '0 мин.',
-        readinessState: 'IDLE',
+        formattedRemaining: '00:00',
+        readinessState: 'READY',
         readinessPercent: 100,
+        isExpired: true,
+        targetTimestamp: null,
         statusText: 'Готов к первому подходу',
       };
     }
 
     const elapsedSeconds = Math.max(0, Math.floor((now - lastTimestamp) / 1000));
     const elapsedMinutes = elapsedSeconds / 60;
-    const targetSeconds = targetRestMinutes * 60;
+    const remainingSeconds = Math.max(0, targetSeconds - elapsedSeconds);
+    const isExpired = elapsedSeconds >= targetSeconds;
+    const targetTimestamp = lastTimestamp + targetSeconds * 1000;
 
     const percent = Math.min(100, Math.round((elapsedSeconds / targetSeconds) * 100));
 
@@ -78,10 +102,14 @@ export function useRestTimer(
 
     return {
       elapsedSeconds,
+      remainingSeconds,
       formattedTime: formatTime(elapsedSeconds),
+      formattedRemaining: formatRemaining(remainingSeconds),
       readinessState: state,
       readinessPercent: percent,
+      isExpired,
+      targetTimestamp,
       statusText,
     };
-  }, [now, lastTimestamp, targetRestMinutes, formatTime]);
+  }, [now, lastTimestamp, targetRestMinutes, formatTime, formatRemaining]);
 }

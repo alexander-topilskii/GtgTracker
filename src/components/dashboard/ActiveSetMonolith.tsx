@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import { ChevronRight, Check, Coffee } from 'lucide-react';
 import { useWorkout } from '../../context/WorkoutContext';
+import { useRestTimer } from '../../hooks/useRestTimer';
 import { ScheduleSlot, ExerciseConfig } from '../../types/workout';
 import { haptic } from '../../utils/haptics';
 import { sparks } from '../../utils/sparks';
@@ -21,23 +22,11 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
   const ambientGlowRef = useRef<HTMLDivElement | null>(null);
   const percentTextRef = useRef<HTMLSpanElement | null>(null);
 
-  // Расчет времени с последнего подхода
-  const [elapsedMinutes, setElapsedMinutes] = useState<string>('—');
-
-  useEffect(() => {
-    const updateTime = () => {
-      if (!lastSetTimestamp) {
-        setElapsedMinutes('—');
-        return;
-      }
-      const mins = Math.floor((Date.now() - lastSetTimestamp) / 60000);
-      setElapsedMinutes(`${mins}м`);
-    };
-
-    updateTime();
-    const timer = setInterval(updateTime, 10000);
-    return () => clearInterval(timer);
-  }, [lastSetTimestamp]);
+  // Живой отсчет таймера готовности до следующего подхода
+  const { formattedRemaining, isExpired } = useRestTimer(
+    lastSetTimestamp,
+    settings.restIntervalMinutes
+  );
 
   const isRestDay = activeRecord.dayType === 'REST';
   const schedule = activeDayPlan?.schedule || [];
@@ -219,7 +208,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
 
   return (
     <div className="precision-card p-4 sm:p-5 transition-all duration-300 shadow-2xl">
-      {/* Телеметрия: номер подхода, время отдыха */}
+      {/* Телеметрия: номер подхода, время отдыха / таймер */}
       <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.10]">
         <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
           {isAllCompleted
@@ -227,9 +216,19 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
             : `ПОДХОД ${String(currentIndex + 1).padStart(2, '0')} / ${String(totalTasks).padStart(2, '0')}`}
         </span>
 
-        <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] font-mono text-xs">
-          <span className="text-zinc-400 text-[10px] uppercase tracking-wider">Отдых:</span>
-          <span className="font-bold text-white font-mono">{elapsedMinutes}</span>
+        <div
+          className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border font-mono text-xs ${
+            !lastSetTimestamp || isExpired
+              ? 'bg-[#ccff00]/10 border-[#ccff00]/30 text-[#ccff00]'
+              : 'bg-white/[0.05] border-white/[0.08] text-white'
+          }`}
+        >
+          <span className="text-zinc-400 text-[10px] uppercase tracking-wider">
+            {!lastSetTimestamp || isExpired ? 'Статус:' : 'Таймер:'}
+          </span>
+          <span className="font-bold font-mono">
+            {!lastSetTimestamp ? 'Готов' : isExpired ? 'Готов! 🔥' : formattedRemaining}
+          </span>
         </div>
       </div>
 

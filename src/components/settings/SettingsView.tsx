@@ -13,14 +13,27 @@ import {
   AlertOctagon,
   RefreshCw,
   Calendar,
+  Bell,
+  BellRing,
+  Send,
+  AlertCircle,
 } from 'lucide-react';
 import { haptic } from '../../utils/haptics';
 import { InstallBlock } from '../pwa/InstallBanner';
+import {
+  isNotificationSupported,
+  getNotificationPermission,
+  requestNotificationPermission,
+  sendNotification,
+} from '../../utils/notifications';
 
 export const SettingsView: React.FC = () => {
   const { settings, updateSettings, refreshData, activeRecord, switchDayType } = useWorkout();
   const [isJsonModalOpen, setIsJsonModalOpen] = useState<boolean>(false);
   const [backupNotice, setBackupNotice] = useState<string | null>(null);
+  const [permissionState, setPermissionState] = useState<NotificationPermission | 'unsupported'>(() =>
+    getNotificationPermission()
+  );
 
   // Выгрузка полного бэкапа
   const handleExportBackup = () => {
@@ -73,6 +86,50 @@ export const SettingsView: React.FC = () => {
         haptic.trigger('medium', settings.soundFeedbackEnabled);
         alert('Все данные сброшены к начальным');
       }
+    }
+  };
+
+  // Управление уведомлениями
+  const handleToggleNotifications = async () => {
+    if (settings.notificationsEnabled) {
+      updateSettings({ notificationsEnabled: false });
+      haptic.trigger('light', settings.soundFeedbackEnabled);
+      return;
+    }
+
+    if (!isNotificationSupported()) {
+      alert('Ваш браузер не поддерживает Web Notifications.');
+      return;
+    }
+
+    const currentPerm = getNotificationPermission();
+    if (currentPerm === 'granted') {
+      updateSettings({ notificationsEnabled: true });
+      haptic.trigger('success', settings.soundFeedbackEnabled);
+      setPermissionState('granted');
+    } else {
+      const result = await requestNotificationPermission();
+      setPermissionState(result);
+      if (result === 'granted') {
+        updateSettings({ notificationsEnabled: true });
+        haptic.trigger('success', settings.soundFeedbackEnabled);
+        sendNotification('GTG Kinetic: Уведомления включены! 🔔', {
+          body: `Таймер настроен на ${settings.restIntervalMinutes} мин. Мы пришлем сигнал перед следующим подходом.`,
+        });
+      } else {
+        updateSettings({ notificationsEnabled: false });
+        haptic.trigger('light', settings.soundFeedbackEnabled);
+      }
+    }
+  };
+
+  const handleSendTestNotification = async () => {
+    haptic.trigger('light', settings.soundFeedbackEnabled);
+    const sent = await sendNotification('GTG Kinetic: Тестовое уведомление 🔥', {
+      body: 'Уведомления работают отлично! Напоминания о подходах будут приходить вовремя.',
+    });
+    if (!sent && permissionState === 'denied') {
+      alert('Уведомления заблокированы браузером. Разрешите их в настройках сайта.');
     }
   };
 
@@ -187,7 +244,101 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Тактильный и звуковой отклик */}
+      {/* 3. Уведомления о готовности к подходу */}
+      <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Bell className="w-4 h-4 text-[#ccff00]" />
+            <h3 className="text-sm font-bold text-white font-sans">
+              Уведомления о подходе
+            </h3>
+          </div>
+          <span
+            className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full border font-bold ${
+              permissionState === 'granted'
+                ? 'bg-[#ccff00]/15 text-[#ccff00] border-[#ccff00]/30'
+                : permissionState === 'denied'
+                ? 'bg-red-500/15 text-red-400 border-red-500/30'
+                : 'bg-zinc-800 text-zinc-400 border-white/5'
+            }`}
+          >
+            {permissionState === 'granted'
+              ? 'Разрешено'
+              : permissionState === 'denied'
+              ? 'Заблокировано'
+              : 'Требуется разрешение'}
+          </span>
+        </div>
+
+        <p className="text-xs text-zinc-400 font-mono leading-relaxed">
+          Отправлять пуш-уведомление по завершении таймера ({settings.restIntervalMinutes} мин. отдыха) до следующего упражнения.
+        </p>
+
+        {/* Слайдер-переключатель уведомлений */}
+        <div className="flex items-center justify-between py-1 border-t border-white/[0.06]">
+          <div className="flex items-center gap-2.5">
+            <BellRing className="w-4 h-4 text-zinc-400" />
+            <div>
+              <div className="text-xs font-semibold text-zinc-200 font-sans">
+                Включить уведомления
+              </div>
+              <div className="text-[10px] text-zinc-400 font-mono">
+                {settings.notificationsEnabled && permissionState === 'granted'
+                  ? 'Уведомления активны'
+                  : 'Уведомления отключены'}
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleToggleNotifications}
+            className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
+              settings.notificationsEnabled && permissionState === 'granted'
+                ? 'bg-[#ccff00]'
+                : 'bg-zinc-800'
+            }`}
+          >
+            <div
+              className={`w-5 h-5 rounded-full ${
+                settings.notificationsEnabled && permissionState === 'granted'
+                  ? 'bg-black'
+                  : 'bg-white'
+              } transition-transform ${
+                settings.notificationsEnabled && permissionState === 'granted'
+                  ? 'translate-x-5'
+                  : 'translate-x-0'
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Тестовое уведомление */}
+        {settings.notificationsEnabled && permissionState === 'granted' && (
+          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between">
+            <span className="text-[11px] font-mono text-zinc-400">Проверить работу:</span>
+            <button
+              type="button"
+              onClick={handleSendTestNotification}
+              className="px-3 py-1.5 rounded-lg bg-[#0e111a] hover:bg-[#161a28] text-[#ccff00] text-xs font-mono font-medium border border-white/[0.08] active:scale-95 transition-all flex items-center gap-1.5 shadow-sm"
+            >
+              <Send className="w-3 h-3" />
+              Отправить тест
+            </button>
+          </div>
+        )}
+
+        {permissionState === 'denied' && (
+          <div className="p-2.5 rounded-xl bg-red-950/30 border border-red-500/20 text-red-300 text-xs font-mono flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <span>
+              Уведомления заблокированы в браузере. Разрешите их в настройках сайта для получения сигналов готовности к подходу.
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* 4. Тактильный и звуковой отклик */}
       <div className="p-4 rounded-2xl bg-[#131724]/90 backdrop-blur-md border border-white/[0.11] shadow-xl space-y-3">
         <h3 className="text-sm font-bold text-white font-sans mb-1">
           Тактильный отклик и звук
