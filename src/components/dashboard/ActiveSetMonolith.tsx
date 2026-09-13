@@ -209,7 +209,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
   return (
     <div className="precision-card p-4 sm:p-5 transition-all duration-300 shadow-2xl">
       {/* Телеметрия: номер подхода, время отдыха / таймер */}
-      <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
+      <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.08]">
         <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
           {isAllCompleted
             ? 'ПЛАН ВЫПОЛНЕН'
@@ -220,7 +220,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
           className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border font-mono text-xs ${
             !lastSetTimestamp || isExpired
               ? 'bg-[#ccff00]/10 border-[#ccff00]/30 text-[#ccff00]'
-              : 'bg-white/[0.05] border-white/[0.08] text-white'
+              : 'bg-white/[0.06] border-white/[0.10] text-white'
           }`}
         >
           <span className="text-zinc-400 text-[10px] uppercase tracking-wider">
@@ -243,7 +243,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
         </h2>
 
         {/* Блок повторений и инструкции */}
-        <div className="mt-2.5 flex items-center justify-between bg-black/40 rounded-2xl p-3 border border-white/[0.04]">
+        <div className="mt-2.5 flex items-center justify-between bg-black/50 rounded-2xl p-3 border border-white/[0.08] shadow-inner">
           <div className="flex items-baseline gap-1.5">
             <span className="text-3xl sm:text-4xl font-black font-mono tracking-tighter text-[#ccff00] leading-none">
               {isAllCompleted ? '100%' : (currentSlot?.reps ?? 10)}

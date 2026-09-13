@@ -51,7 +51,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
     <BottomSheet isOpen={isOpen} onClose={onClose} title={exercise.name}>
       <div className="space-y-5">
         {/* Блок настройки повторений для нового подхода */}
-        <div className="p-4 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
+        <div className="p-4 rounded-2xl bg-[#131622] border border-white/[0.12] shadow-lg">
           <div className="text-xs font-mono text-zinc-400 mb-3 uppercase tracking-wider">
             Записать подход с ручными параметрами
           </div>
@@ -62,7 +62,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
               <button
                 type="button"
                 onClick={() => setCustomReps((r) => Math.max(1, r - 1))}
-                className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 active:scale-95 flex items-center justify-center text-white text-lg font-bold border border-white/5"
+                className="w-9 h-9 rounded-xl bg-[#1a1f2c] hover:bg-[#222838] active:scale-95 flex items-center justify-center text-white text-lg font-bold border border-white/[0.08]"
               >
                 <Minus className="w-4 h-4" />
               </button>
@@ -72,7 +72,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
               <button
                 type="button"
                 onClick={() => setCustomReps((r) => r + 1)}
-                className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 active:scale-95 flex items-center justify-center text-white text-lg font-bold border border-white/5"
+                className="w-9 h-9 rounded-xl bg-[#1a1f2c] hover:bg-[#222838] active:scale-95 flex items-center justify-center text-white text-lg font-bold border border-white/[0.08]"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -88,7 +88,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
                 value={customWeight || ''}
                 placeholder="0"
                 onChange={(e) => setCustomWeight(Number(e.target.value) || 0)}
-                className="w-20 px-3 py-1.5 rounded-xl bg-zinc-800 text-center font-mono text-white text-sm border border-white/10 focus:outline-none focus:border-[#ccff00]"
+                className="w-20 px-3 py-1.5 rounded-xl bg-[#1a1f2c] text-center font-mono text-white text-sm border border-white/[0.12] focus:outline-none focus:border-[#ccff00]"
               />
               <span className="text-xs text-zinc-400 font-mono">кг</span>
             </div>
@@ -114,7 +114,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
           </div>
 
           {exerciseSets.length === 0 ? (
-            <div className="p-4 rounded-xl bg-zinc-900/40 border border-white/5 text-center text-xs text-zinc-500 font-mono">
+            <div className="p-4 rounded-xl bg-[#1a1f2c]/50 border border-white/[0.06] text-center text-xs text-zinc-500 font-mono">
               Подходов еще не зафиксировано
             </div>
           ) : (
@@ -128,7 +128,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
                 return (
                   <div
                     key={set.id}
-                    className="p-3 rounded-xl bg-zinc-900/90 border border-white/[0.06] flex items-center justify-between"
+                    className="p-3 rounded-xl bg-[#1a1f2c] border border-white/[0.08] flex items-center justify-between shadow-sm"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="w-6 h-6 rounded-full bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/30 text-xs font-mono flex items-center justify-center font-bold">
