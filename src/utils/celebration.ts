@@ -8,7 +8,7 @@ export function triggerNeonBurst(originX: number = 0.5, originY: number = 0.5) {
       spread: 60,
       startVelocity: 25,
       origin: { x: originX, y: originY },
-      colors: ['#10b981', '#06b6d4', '#34d399', '#38bdf8'],
+      colors: ['#ccff00', '#d9f99d', '#e2ff3b', '#ffffff'],
       ticks: 120,
       gravity: 1.2,
       scalar: 0.7,
@@ -25,7 +25,7 @@ export function triggerDayCompletedCelebration() {
     const count = 200;
     const defaults = {
       origin: { y: 0.7 },
-      colors: ['#10b981', '#06b6d4', '#f59e0b', '#10b981'],
+      colors: ['#ccff00', '#d9f99d', '#06b6d4', '#e2ff3b'],
       disableForReducedMotion: true,
     };
 

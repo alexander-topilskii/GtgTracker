@@ -27,11 +27,11 @@ export const HistoryView: React.FC = () => {
       <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08]">
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/[0.06]">
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-emerald-400" />
+            <Calendar className="w-4 h-4 text-[#ccff00]" />
             <h4 className="text-sm font-bold text-white font-sans">
               {formatFriendlyDate(selectedDate)}
               {isToday && (
-                <span className="ml-2 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                <span className="ml-2 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/30">
                   Сегодня
                 </span>
               )}
@@ -57,7 +57,7 @@ export const HistoryView: React.FC = () => {
           <div className="space-y-2">
             <div className="text-[11px] font-mono text-zinc-400 flex items-center justify-between pb-1">
               <span>Выполнено: {selectedRecord.completedSets.length} подходов</span>
-              <span className="text-emerald-400 font-semibold flex items-center gap-1">
+              <span className="text-[#ccff00] font-semibold flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3" />
                 {selectedRecord.completedSets.reduce((a, s) => a + s.reps, 0)} повторений
               </span>
@@ -75,7 +75,7 @@ export const HistoryView: React.FC = () => {
                   className="p-2.5 rounded-xl bg-zinc-900/70 border border-white/5 flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-mono font-bold flex items-center justify-center border border-emerald-500/20">
+                    <span className="w-5 h-5 rounded-full bg-[#ccff00]/10 text-[#ccff00] text-[10px] font-mono font-bold flex items-center justify-center border border-[#ccff00]/25">
                       {idx + 1}
                     </span>
                     <div>
@@ -91,7 +91,7 @@ export const HistoryView: React.FC = () => {
                   </div>
 
                   <div className="text-right">
-                    <span className="text-xs font-bold font-mono text-emerald-400">
+                    <span className="text-xs font-bold font-mono text-[#ccff00]">
                       {set.reps} повт.
                     </span>
                     {set.weight ? (

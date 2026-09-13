@@ -8,15 +8,15 @@ export const DashboardView: React.FC = () => {
   const [selectedExercise, setSelectedExercise] = useState<ExerciseConfig | null>(null);
 
   return (
-    <div className="flex-1 flex flex-col justify-between min-h-0 overflow-hidden px-4 py-2 gap-2.5">
-      {/* Центр: Монолитная карточка активного подхода с магнитным слайдером */}
-      <main className="my-auto py-1 shrink-0">
-        <ActiveSetMonolith onOpenModal={setSelectedExercise} />
+    <div className="flex-1 flex flex-col justify-between min-h-0 overflow-hidden px-3.5 pt-2 pb-1.5 gap-2">
+      {/* Верх: Секвенсор всех заданий на сегодня (заполняет все верхнее пространство без пробелов) */}
+      <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <SequencerTimeline onOpenModal={setSelectedExercise} />
       </main>
 
-      {/* Низ: Секвенсор всех подходов дня */}
-      <footer className="shrink-0 pb-1">
-        <SequencerTimeline onOpenModal={setSelectedExercise} />
+      {/* Низ: Монолитная карточка активного упражнения со слайдером (удобная зона большого пальца) */}
+      <footer className="shrink-0">
+        <ActiveSetMonolith onOpenModal={setSelectedExercise} />
       </footer>
 
       {/* Модальное окно редактирования/просмотра подходов */}

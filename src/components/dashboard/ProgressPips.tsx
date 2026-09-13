@@ -31,7 +31,7 @@ export const ProgressPips: React.FC<ProgressPipsProps> = ({
               isCompleted
                 ? isExtra
                   ? 'bg-cyan-400 glow-cyan shadow-[0_0_10px_rgba(6,182,212,0.8)]'
-                  : 'bg-emerald-400 glow-emerald shadow-[0_0_10px_rgba(16,185,129,0.8)]'
+                  : 'bg-[#ccff00] glow-neon shadow-[0_0_10px_rgba(204,255,0,0.8)]'
                 : 'bg-zinc-800 border border-white/10'
             }`}
           />

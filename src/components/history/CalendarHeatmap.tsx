@@ -93,7 +93,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
           const isSelected = selectedDate === dateKey;
           const isToday = todayKey === dateKey;
 
-          // Статус дня: зеленый (выполнен план), желтый (частично), серый (отдых/нет)
+          // Статус дня: неон/желтый (выполнен план), янтарный (частично), серый (отдых/нет)
           let statusDot = null;
 
           if (record && record.completedSets && record.completedSets.length > 0) {
@@ -102,7 +102,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
             const isFull = record.completedSets.length >= targetTotalSets;
 
             if (isFull) {
-              statusDot = <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 glow-emerald" />;
+              statusDot = <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] glow-neon" />;
             } else {
               statusDot = <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.7)]" />;
             }
@@ -122,7 +122,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
                 isSelected
                   ? 'bg-zinc-800 text-white font-bold border border-white/20 shadow-md'
                   : isToday
-                  ? 'bg-zinc-800/40 text-emerald-400 font-semibold border border-emerald-500/30'
+                  ? 'bg-zinc-800/40 text-[#ccff00] font-semibold border border-[#ccff00]/40'
                   : 'text-zinc-300 hover:bg-zinc-800/40'
               }`}
             >
@@ -138,7 +138,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
       {/* Легенда */}
       <div className="flex items-center justify-center gap-4 mt-3 pt-2.5 border-t border-white/[0.06] text-[10px] font-mono text-zinc-400">
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 glow-emerald" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] glow-neon" />
           <span>План закрыт</span>
         </div>
         <div className="flex items-center gap-1.5">

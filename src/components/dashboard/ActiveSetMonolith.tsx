@@ -12,12 +12,14 @@ interface ActiveSetMonolithProps {
 export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModal }) => {
   const { activeDayPlan, activeRecord, logSet, settings, lastSetTimestamp } = useWorkout();
 
-  // Состояние слайдера
-  const [sliderProgress, setSliderProgress] = useState<number>(0);
+  // Рефы для нулевой задержки при перетаскивании (0ms latency direct DOM updates)
   const isDraggingRef = useRef<boolean>(false);
   const startXRef = useRef<number>(0);
+  const currentDeltaRef = useRef<number>(0);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const thumbRef = useRef<HTMLDivElement | null>(null);
+  const ambientGlowRef = useRef<HTMLDivElement | null>(null);
+  const percentTextRef = useRef<HTMLSpanElement | null>(null);
 
   // Расчет времени с последнего подхода
   const [elapsedMinutes, setElapsedMinutes] = useState<string>('—');
@@ -42,10 +44,13 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
   const totalTasks = schedule.length;
 
   // Подсчет выполненных подходов по упражнениям для определения текущего активного слота
-  const exerciseCounts: Record<string, number> = {};
-  for (const s of activeRecord.completedSets) {
-    exerciseCounts[s.exerciseId] = (exerciseCounts[s.exerciseId] || 0) + 1;
-  }
+  const exerciseCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const s of activeRecord.completedSets) {
+      counts[s.exerciseId] = (counts[s.exerciseId] || 0) + 1;
+    }
+    return counts;
+  }, [activeRecord.completedSets]);
 
   const { currentSlot, currentIndex, isAllCompleted } = useMemo<{
     currentSlot: ScheduleSlot | null;
@@ -86,18 +91,27 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
     // Взрыв микро-искр у правого края слайдера
     if (trackRef.current) {
       const rect = trackRef.current.getBoundingClientRect();
-      sparks.explode(rect.right - 28, rect.top + rect.height / 2, 28);
+      sparks.explode(rect.right - 28, rect.top + rect.height / 2, 30);
     }
 
     haptic.trigger('success', settings.soundFeedbackEnabled);
     logSet(exercise, currentSlot.reps, currentSlot.weight);
   }, [currentSlot, activeDayPlan, settings.soundFeedbackEnabled, logSet]);
 
-  // Физика драга слайдера (Touch & Mouse)
+  // Физика драга слайдера с мгновенным откликом (без задержек React re-render)
   const handleDragStart = (clientX: number) => {
     if (isAllCompleted || isRestDay) return;
     isDraggingRef.current = true;
     startXRef.current = clientX;
+    currentDeltaRef.current = 0;
+
+    if (thumbRef.current) {
+      thumbRef.current.style.transition = 'none';
+    }
+    if (ambientGlowRef.current) {
+      ambientGlowRef.current.style.transition = 'none';
+    }
+
     haptic.playClickSound('snap');
   };
 
@@ -109,13 +123,40 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
     const maxDistance = Math.max(1, trackWidth - thumbWidth - 12);
 
     const delta = Math.max(0, Math.min(maxDistance, clientX - startXRef.current));
+    currentDeltaRef.current = delta;
     const progress = delta / maxDistance;
 
-    setSliderProgress(progress);
+    // 1. Мгновенное смещение ползунка строго под пальцем/курсором
+    thumbRef.current.style.transform = `translateX(${delta}px)`;
 
-    if (progress >= 0.95) {
+    // 2. Градиент появления фона как функция от прогресса (чем правее — тем ярче свечение)
+    if (ambientGlowRef.current) {
+      ambientGlowRef.current.style.opacity = Math.pow(progress, 0.85).toFixed(3);
+      ambientGlowRef.current.style.boxShadow = `inset 0 0 ${Math.round(progress * 28)}px rgba(204, 255, 0, ${(progress * 0.5).toFixed(2)})`;
+    }
+
+    // 3. Текстовый процент
+    if (percentTextRef.current) {
+      percentTextRef.current.innerText = `${Math.round(progress * 100)}%`;
+    }
+
+    // 4. Достижение порога срабатывания
+    if (progress >= 0.94) {
       isDraggingRef.current = false;
-      setSliderProgress(0);
+
+      // Плавный сброс бегунка и свечения
+      if (thumbRef.current) {
+        thumbRef.current.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        thumbRef.current.style.transform = 'translateX(0px)';
+      }
+      if (ambientGlowRef.current) {
+        ambientGlowRef.current.style.transition = 'opacity 0.2s ease-out';
+        ambientGlowRef.current.style.opacity = '0';
+      }
+      if (percentTextRef.current) {
+        percentTextRef.current.innerText = '0%';
+      }
+
       handleCompleteActiveSet();
     }
   }, [handleCompleteActiveSet]);
@@ -123,7 +164,19 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
   const handleDragEnd = useCallback(() => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-    setSliderProgress(0);
+
+    // Плавный откат бегунка и затухание свечения при отпускании
+    if (thumbRef.current) {
+      thumbRef.current.style.transition = 'transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      thumbRef.current.style.transform = 'translateX(0px)';
+    }
+    if (ambientGlowRef.current) {
+      ambientGlowRef.current.style.transition = 'opacity 0.22s ease-out';
+      ambientGlowRef.current.style.opacity = '0';
+    }
+    if (percentTextRef.current) {
+      percentTextRef.current.innerText = '0%';
+    }
   }, []);
 
   useEffect(() => {
@@ -150,31 +203,24 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
   // Экран дня отдыха
   if (isRestDay) {
     return (
-      <div className="precision-card p-6 text-center my-auto transition-all duration-300">
-        <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center mx-auto mb-3 text-emerald-400">
-          <Coffee className="w-7 h-7" />
+      <div className="precision-card p-5 text-center transition-all duration-300">
+        <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center mx-auto mb-2 text-[#ccff00]">
+          <Coffee className="w-6 h-6" />
         </div>
-        <h3 className="text-xl font-black text-white tracking-tight font-sans">
+        <h3 className="text-lg font-black text-white tracking-tight font-sans">
           Суперкомпенсация
         </h3>
-        <p className="text-xs text-zinc-400 font-mono mt-2 leading-relaxed max-w-xs mx-auto">
+        <p className="text-[11px] text-zinc-400 font-mono mt-1 leading-relaxed max-w-xs mx-auto">
           Сегодня нервная система и связки восстанавливаются. Отдыхайте, пейте воду и готовьтесь к следующей сессии GtG.
         </p>
       </div>
     );
   }
 
-  // Расчет физического смещения thumb
-  const maxThumbDistance = trackRef.current && thumbRef.current
-    ? trackRef.current.clientWidth - thumbRef.current.clientWidth - 12
-    : 240;
-  const thumbTranslateX = sliderProgress * maxThumbDistance;
-  const fillPercent = Math.round(sliderProgress * 100);
-
   return (
-    <div className="precision-card p-5 sm:p-6 transition-all duration-300 shadow-2xl">
+    <div className="precision-card p-4 sm:p-5 transition-all duration-300 shadow-2xl">
       {/* Телеметрия: номер подхода, группа мышц, время отдыха */}
-      <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+      <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono tracking-widest uppercase text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/25 px-2.5 py-0.5 rounded-full font-bold">
             {isAllCompleted
@@ -193,9 +239,9 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
       </div>
 
       {/* Фокус на текущем упражнении и нормативе */}
-      <div className="my-4">
+      <div className="my-3">
         <div className="flex items-center justify-between">
-          <div className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] mb-1 font-mono font-bold">
+          <div className="text-[9px] text-zinc-500 uppercase tracking-[0.2em] mb-0.5 font-mono font-bold">
             {isAllCompleted ? 'СТАТУС ТРЕНИРОВКИ' : 'ТЕКУЩЕЕ ДВИЖЕНИЕ'}
           </div>
           {currentSlot && (
@@ -205,21 +251,21 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
           )}
         </div>
 
-        <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase leading-tight font-sans">
+        <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase leading-tight font-sans">
           {isAllCompleted ? 'ВСЕ ПОДХОДЫ ЗАКРЫТЫ' : (currentSlot?.exerciseName || 'Упражнение')}
         </h2>
 
         {/* Блок повторений и инструкции */}
-        <div className="mt-3.5 flex items-center justify-between bg-black/40 rounded-2xl p-3.5 border border-white/[0.04]">
+        <div className="mt-2.5 flex items-center justify-between bg-black/40 rounded-2xl p-3 border border-white/[0.04]">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-4xl sm:text-5xl font-black font-mono tracking-tighter text-[#ccff00] leading-none">
+            <span className="text-3xl sm:text-4xl font-black font-mono tracking-tighter text-[#ccff00] leading-none">
               {isAllCompleted ? '100%' : (currentSlot?.reps ?? 10)}
             </span>
             <span className="text-xs font-mono text-zinc-400 font-bold uppercase tracking-wider">
               {isAllCompleted ? '' : 'повт.'}
             </span>
             {currentSlot?.weight ? (
-              <span className="text-xs font-mono text-zinc-400 ml-1">
+              <span className="text-xs font-mono text-zinc-400 ml-1 font-semibold">
                 • {currentSlot.weight} кг
               </span>
             ) : null}
@@ -229,7 +275,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
             <div className="text-[9px] font-mono uppercase text-zinc-500 tracking-wider">
               {isAllCompleted ? 'Итог дня' : 'Инструкция'}
             </div>
-            <div className="text-xs text-zinc-300 font-medium leading-snug line-clamp-2">
+            <div className="text-[11px] text-zinc-300 font-medium leading-snug line-clamp-2">
               {isAllCompleted
                 ? 'Суммарный объем дня набран чисто и без переутомления.'
                 : (currentSlot?.cue || 'Контроль движения • чистое исполнение')}
@@ -239,7 +285,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
       </div>
 
       {/* Тактильный магнитный слайдер "Сдвиг для отметки" */}
-      <div className="mt-4 pt-3 border-t border-white/[0.06]">
+      <div className="mt-3 pt-2.5 border-t border-white/[0.06]">
         {isAllCompleted ? (
           <button
             type="button"
@@ -248,26 +294,32 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
                 onOpenModal(activeDayPlan.exercises[0]);
               }
             }}
-            className="w-full py-3.5 px-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-xs font-mono font-bold text-zinc-300 flex items-center justify-center gap-2 transition-all active:scale-98"
+            className="w-full py-3 px-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-xs font-mono font-bold text-zinc-300 flex items-center justify-center gap-2 transition-all active:scale-98"
           >
             <Check className="w-4 h-4 text-[#ccff00]" />
-            <span>Все 8 подходов выполнены • Добавить экстра-подход</span>
+            <span>Все подходы выполнены • Добавить экстра-подход</span>
           </button>
         ) : (
           <div>
-            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 uppercase tracking-wider mb-2">
+            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 uppercase tracking-wider mb-1.5">
               <span>Сдвиг для отметки</span>
-              <span className="text-[#ccff00] font-bold font-mono">{fillPercent}%</span>
+              <span ref={percentTextRef} className="text-[#ccff00] font-bold font-mono">
+                0%
+              </span>
             </div>
 
             <div
               ref={trackRef}
-              className="slider-track h-14 p-1.5 flex items-center select-none relative"
+              className="slider-track h-13 sm:h-14 p-1.5 flex items-center select-none relative overflow-hidden"
             >
-              {/* Динамическая лазерная полоса заполнения */}
+              {/* Градиент появления фона как функция от прогресса (чем правее — тем сильнее светится) */}
               <div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#ccff00]/15 via-[#ccff00]/25 to-[#ccff00]/40 border-r-2 border-[#ccff00] pointer-events-none transition-all duration-75"
-                style={{ width: `${fillPercent}%` }}
+                ref={ambientGlowRef}
+                className="absolute inset-0 pointer-events-none rounded-full opacity-0"
+                style={{
+                  background:
+                    'linear-gradient(90deg, rgba(204, 255, 0, 0.08) 0%, rgba(204, 255, 0, 0.25) 50%, rgba(204, 255, 0, 0.55) 100%)',
+                }}
               />
 
               {/* Фоновая надпись с подсказкой */}
@@ -283,8 +335,7 @@ export const ActiveSetMonolith: React.FC<ActiveSetMonolithProps> = ({ onOpenModa
                 onTouchStart={(e) => {
                   if (e.touches.length > 0) handleDragStart(e.touches[0].clientX);
                 }}
-                style={{ transform: `translateX(${thumbTranslateX}px)` }}
-                className="slider-thumb relative z-10 w-11 h-11 rounded-full text-zinc-950 flex items-center justify-center font-black text-sm active:scale-95 select-none"
+                className="slider-thumb relative z-10 w-11 h-11 rounded-full text-zinc-950 flex items-center justify-center font-black text-sm active:scale-95 select-none touch-none"
               >
                 <ChevronRight className="w-5 h-5 stroke-[2.8]" />
               </div>

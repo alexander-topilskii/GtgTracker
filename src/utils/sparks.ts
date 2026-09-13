@@ -15,7 +15,7 @@ class SparksEngine {
   private ctx: CanvasRenderingContext2D | null = null;
   private sparks: Spark[] = [];
   private isRunning: boolean = false;
-  private readonly palette = ['#ccff00', '#d9f99d', '#ffffff', '#10b981'];
+  private readonly palette = ['#ccff00', '#d9f99d', '#ffffff', '#e2ff3b'];
 
   init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;

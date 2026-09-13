@@ -66,7 +66,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
               >
                 <Minus className="w-4 h-4" />
               </button>
-              <span className="w-10 text-center text-xl font-bold font-mono text-emerald-400">
+              <span className="w-10 text-center text-xl font-bold font-mono text-[#ccff00]">
                 {customReps}
               </span>
               <button
@@ -88,7 +88,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
                 value={customWeight || ''}
                 placeholder="0"
                 onChange={(e) => setCustomWeight(Number(e.target.value) || 0)}
-                className="w-20 px-3 py-1.5 rounded-xl bg-zinc-800 text-center font-mono text-white text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
+                className="w-20 px-3 py-1.5 rounded-xl bg-zinc-800 text-center font-mono text-white text-sm border border-white/10 focus:outline-none focus:border-[#ccff00]"
               />
               <span className="text-xs text-zinc-400 font-mono">кг</span>
             </div>
@@ -97,7 +97,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
           <button
             type="button"
             onClick={handleAddCustomSet}
-            className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm tracking-wide transition-all duration-200 active:scale-98 glow-emerald flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl bg-[#ccff00] hover:bg-[#d9f99d] text-black font-bold text-sm tracking-wide transition-all duration-200 active:scale-98 glow-neon flex items-center justify-center gap-2"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             Зафиксировать подход ({customReps} повт.)
@@ -108,7 +108,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
         <div>
           <div className="text-xs font-mono text-zinc-400 mb-2.5 uppercase tracking-wider flex items-center justify-between">
             <span>Выполнено за сегодня</span>
-            <span className="text-emerald-400">
+            <span className="text-[#ccff00]">
               {exerciseSets.length} / {exercise.targetSets}
             </span>
           </div>
@@ -131,7 +131,7 @@ export const SetEditModal: React.FC<SetEditModalProps> = ({
                     className="p-3 rounded-xl bg-zinc-900/90 border border-white/[0.06] flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-mono flex items-center justify-center font-bold">
+                      <span className="w-6 h-6 rounded-full bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/30 text-xs font-mono flex items-center justify-center font-bold">
                         {index + 1}
                       </span>
                       <div>

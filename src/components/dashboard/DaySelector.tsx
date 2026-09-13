@@ -35,14 +35,14 @@ export const DaySelector: React.FC = () => {
               }`}
             >
               {isActive && (
-                <span className="absolute top-1 right-2 w-1.5 h-1.5 rounded-full bg-emerald-400 glow-emerald" />
+                <span className="absolute top-1 right-2 w-1.5 h-1.5 rounded-full bg-[#ccff00] glow-neon" />
               )}
               <div className="text-xs font-bold font-sans tracking-tight">
                 {opt.label}
               </div>
               <div
                 className={`text-[9px] font-mono transition-colors ${
-                  isActive ? 'text-emerald-400' : 'text-zinc-500'
+                  isActive ? 'text-[#ccff00]' : 'text-zinc-500'
                 }`}
               >
                 {opt.short}

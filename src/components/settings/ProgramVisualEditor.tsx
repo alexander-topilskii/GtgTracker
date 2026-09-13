@@ -98,8 +98,8 @@ export const ProgramVisualEditor: React.FC = () => {
       </div>
 
       {/* Памятка об иммутабельности */}
-      <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/25 flex items-start gap-2 text-xs font-mono text-emerald-300">
-        <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+      <div className="p-3 rounded-xl bg-[#ccff00]/10 border border-[#ccff00]/25 flex items-start gap-2 text-xs font-mono text-[#ccff00]">
+        <ShieldCheck className="w-4 h-4 text-[#ccff00] shrink-0 mt-0.5" />
         <span>
           Любые правки нормативов и упражнений применяются только к новым тренировкам. Вся история тренировок сохраняется в исходном виде.
         </span>
@@ -114,7 +114,7 @@ export const ProgramVisualEditor: React.FC = () => {
             return (
               <div
                 key={ex.id}
-                className="p-3.5 rounded-xl bg-zinc-900 border border-emerald-500/40 space-y-3"
+                className="p-3.5 rounded-xl bg-zinc-900 border border-[#ccff00]/50 space-y-3"
               >
                 <div>
                   <label className="text-[10px] font-mono text-zinc-400 block mb-1">
@@ -126,7 +126,7 @@ export const ProgramVisualEditor: React.FC = () => {
                     onChange={(e) =>
                       setEditingExercise({ ...editingExercise, name: e.target.value })
                     }
-                    className="w-full px-3 py-1.5 rounded-lg bg-zinc-800 text-white text-xs font-sans border border-white/10 focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-1.5 rounded-lg bg-zinc-800 text-white text-xs font-sans border border-white/10 focus:outline-none focus:border-[#ccff00]"
                   />
                 </div>
 
@@ -138,13 +138,15 @@ export const ProgramVisualEditor: React.FC = () => {
                     <input
                       type="number"
                       value={editingExercise.targetSets}
+                      min={1}
+                      max={20}
                       onChange={(e) =>
                         setEditingExercise({
                           ...editingExercise,
                           targetSets: Math.max(1, Number(e.target.value) || 1),
                         })
                       }
-                      className="w-full px-2 py-1.5 rounded-lg bg-zinc-800 text-center text-white text-xs font-mono border border-white/10"
+                      className="w-full px-3 py-1.5 rounded-lg bg-zinc-800 text-white text-xs font-mono border border-white/10 focus:outline-none focus:border-[#ccff00]"
                     />
                   </div>
                   <div>
@@ -154,13 +156,15 @@ export const ProgramVisualEditor: React.FC = () => {
                     <input
                       type="number"
                       value={editingExercise.defaultReps}
+                      min={1}
+                      max={100}
                       onChange={(e) =>
                         setEditingExercise({
                           ...editingExercise,
                           defaultReps: Math.max(1, Number(e.target.value) || 1),
                         })
                       }
-                      className="w-full px-2 py-1.5 rounded-lg bg-zinc-800 text-center text-white text-xs font-mono border border-white/10"
+                      className="w-full px-3 py-1.5 rounded-lg bg-zinc-800 text-white text-xs font-mono border border-white/10 focus:outline-none focus:border-[#ccff00]"
                     />
                   </div>
                   <div>
@@ -169,14 +173,15 @@ export const ProgramVisualEditor: React.FC = () => {
                     </label>
                     <input
                       type="number"
-                      value={editingExercise.weight ?? 0}
+                      value={editingExercise.weight || ''}
+                      placeholder="0"
                       onChange={(e) =>
                         setEditingExercise({
                           ...editingExercise,
-                          weight: Number(e.target.value) || undefined,
+                          weight: Number(e.target.value) || 0,
                         })
                       }
-                      className="w-full px-2 py-1.5 rounded-lg bg-zinc-800 text-center text-white text-xs font-mono border border-white/10"
+                      className="w-full px-3 py-1.5 rounded-lg bg-zinc-800 text-white text-xs font-mono border border-white/10 focus:outline-none focus:border-[#ccff00]"
                     />
                   </div>
                 </div>
@@ -192,7 +197,7 @@ export const ProgramVisualEditor: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleSaveExercise(editingExercise)}
-                    className="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs font-mono flex items-center gap-1.5 glow-emerald"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#ccff00] hover:bg-[#d9f99d] text-black font-bold text-xs font-mono flex items-center gap-1.5 glow-neon"
                   >
                     <Save className="w-3.5 h-3.5" />
                     Сохранить
@@ -243,7 +248,7 @@ export const ProgramVisualEditor: React.FC = () => {
       <button
         type="button"
         onClick={handleAddExercise}
-        className="w-full py-2.5 rounded-xl border border-dashed border-white/20 hover:border-emerald-500/50 text-zinc-300 hover:text-emerald-400 text-xs font-mono flex items-center justify-center gap-1.5 transition-all active:scale-98"
+        className="w-full py-2.5 rounded-xl border border-dashed border-white/20 hover:border-[#ccff00]/50 text-zinc-300 hover:text-[#ccff00] text-xs font-mono flex items-center justify-center gap-1.5 transition-all active:scale-98"
       >
         <Plus className="w-4 h-4" />
         Добавить упражнение в план

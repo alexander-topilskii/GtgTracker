@@ -69,7 +69,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       onTouchEnd={cancelLongPress}
       className={`relative w-full p-3.5 rounded-2xl border transition-all duration-200 ${
         isTargetCompleted
-          ? 'bg-emerald-950/20 border-emerald-500/30'
+          ? 'bg-zinc-900/60 border-[#ccff00]/30'
           : 'bg-[#12151f]/80 backdrop-blur-md border-white/[0.08] hover:border-white/15'
       }`}
     >
@@ -81,7 +81,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
               {exercise.name}
             </h3>
             {isTargetCompleted && (
-              <span className="flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-mono font-semibold">
+              <span className="flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-[#ccff00]/20 text-[#ccff00] border border-[#ccff00]/30 text-[9px] font-mono font-semibold">
                 <Check className="w-2.5 h-2.5 stroke-[3]" />
                 Готово
               </span>
@@ -101,7 +101,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                     key={`${time}_${idx}`}
                     className={`text-[10px] font-mono px-1.5 py-0.5 rounded border transition-colors ${
                       isDone
-                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 line-through opacity-75'
+                        ? 'bg-[#ccff00]/15 border-[#ccff00]/30 text-[#ccff00] line-through opacity-75'
                         : 'bg-zinc-800/80 border-white/10 text-zinc-300'
                     }`}
                   >
@@ -153,8 +153,8 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
         }}
         className={`w-full min-h-[44px] py-2 px-4 rounded-xl flex items-center justify-center gap-2 font-bold text-xs tracking-wider uppercase transition-all duration-200 active:scale-96 select-none ${
           isTargetCompleted
-            ? 'bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/30'
-            : 'bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20'
+            ? 'bg-zinc-800 hover:bg-zinc-700 text-[#ccff00] border border-[#ccff00]/30'
+            : 'bg-[#ccff00] hover:bg-[#d9f99d] text-black shadow-lg shadow-[#ccff00]/25'
         }`}
       >
         <Plus className="w-4 h-4 stroke-[3]" />

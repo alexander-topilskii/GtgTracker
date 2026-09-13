@@ -87,9 +87,9 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
   };
 
   return (
-    <div className="flex flex-col gap-1.5 shrink-0">
+    <div className="flex-1 min-h-0 flex flex-col gap-1.5 overflow-hidden">
       {/* Шапка секвенсора */}
-      <div className="flex items-center justify-between px-1">
+      <div className="flex items-center justify-between px-1 shrink-0">
         <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 flex items-center gap-2">
           <span>СЕКВЕНСОР ДНЯ</span>
           <span className="text-zinc-700">•</span>
@@ -103,7 +103,7 @@ export const SequencerTimeline: React.FC<SequencerTimelineProps> = ({ onOpenModa
       </div>
 
       {/* Список подходов в прецизионном контейнере */}
-      <div className="precision-card p-2 max-h-48 overflow-y-auto no-scrollbar flex flex-col gap-1.5">
+      <div className="precision-card p-2 flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-1.5">
         {slotsMeta.map((item) => {
           return (
             <div

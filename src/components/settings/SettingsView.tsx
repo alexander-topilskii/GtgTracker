@@ -84,12 +84,12 @@ export const SettingsView: React.FC = () => {
       <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-emerald-400" />
+            <Calendar className="w-4 h-4 text-[#ccff00]" />
             <h3 className="text-sm font-bold text-white font-sans">
               Текущий тренировочный день
             </h3>
           </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ccff00]/10 border border-[#ccff00]/25 text-[#ccff00]">
             Авто-отсчет
           </span>
         </div>
@@ -114,7 +114,7 @@ export const SettingsView: React.FC = () => {
                 }}
                 className={`py-2 px-2 rounded-xl text-center transition-all ${
                   isActive
-                    ? 'bg-emerald-500 text-black font-bold shadow-md shadow-emerald-500/20'
+                    ? 'bg-[#ccff00] text-black font-bold shadow-md shadow-[#ccff00]/25'
                     : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-white/5'
                 }`}
               >
@@ -144,7 +144,7 @@ export const SettingsView: React.FC = () => {
               haptic.trigger('light', settings.soundFeedbackEnabled);
               setIsJsonModalOpen(true);
             }}
-            className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-emerald-400 text-xs font-mono flex items-center gap-1.5 border border-white/5 transition-all"
+            className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-[#ccff00] text-xs font-mono flex items-center gap-1.5 border border-white/5 transition-all"
           >
             <Code2 className="w-3.5 h-3.5" />
             JSON-код
@@ -163,7 +163,7 @@ export const SettingsView: React.FC = () => {
           </h3>
         </div>
         <p className="text-xs text-zinc-400 font-mono mb-3">
-          Время отдыха между подходами для перехода индикатора в зеленый статус.
+          Время отдыха между подходами для перехода индикатора в статус готовности (100% READY).
         </p>
 
         <div className="grid grid-cols-5 gap-1.5">
@@ -177,7 +177,7 @@ export const SettingsView: React.FC = () => {
               }}
               className={`py-2 rounded-xl text-xs font-mono font-bold transition-all ${
                 settings.restIntervalMinutes === mins
-                  ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                  ? 'bg-[#ccff00] text-black shadow-lg shadow-[#ccff00]/25'
                   : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-white/5'
               }`}
             >
@@ -215,11 +215,13 @@ export const SettingsView: React.FC = () => {
               haptic.trigger('light', settings.soundFeedbackEnabled);
             }}
             className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-              settings.hapticFeedbackEnabled ? 'bg-emerald-500' : 'bg-zinc-800'
+              settings.hapticFeedbackEnabled ? 'bg-[#ccff00]' : 'bg-zinc-800'
             }`}
           >
             <div
-              className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              className={`w-5 h-5 rounded-full ${
+                settings.hapticFeedbackEnabled ? 'bg-black' : 'bg-white'
+              } transition-transform ${
                 settings.hapticFeedbackEnabled ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
@@ -248,11 +250,13 @@ export const SettingsView: React.FC = () => {
               haptic.trigger('light', newVal);
             }}
             className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-              settings.soundFeedbackEnabled ? 'bg-emerald-500' : 'bg-zinc-800'
+              settings.soundFeedbackEnabled ? 'bg-[#ccff00]' : 'bg-zinc-800'
             }`}
           >
             <div
-              className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              className={`w-5 h-5 rounded-full ${
+                settings.soundFeedbackEnabled ? 'bg-black' : 'bg-white'
+              } transition-transform ${
                 settings.soundFeedbackEnabled ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
@@ -270,7 +274,7 @@ export const SettingsView: React.FC = () => {
         </h3>
 
         {backupNotice && (
-          <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center gap-2">
+          <div className="p-2.5 rounded-xl bg-[#ccff00]/15 border border-[#ccff00]/30 text-[#ccff00] text-xs font-mono flex items-center gap-2">
             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
             <span>{backupNotice}</span>
           </div>
@@ -282,7 +286,7 @@ export const SettingsView: React.FC = () => {
             onClick={handleExportBackup}
             className="py-2.5 px-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-mono flex items-center justify-center gap-1.5 border border-white/5 transition-all active:scale-95"
           >
-            <Download className="w-4 h-4 text-emerald-400" />
+            <Download className="w-4 h-4 text-[#ccff00]" />
             Скачать бэкап
           </button>
 

@@ -143,8 +143,8 @@ export const ProgramJsonModal: React.FC<ProgramJsonModalProps> = ({
 
         {/* Успешное сохранение */}
         {successMessage && (
-          <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center gap-2">
-            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="p-3 rounded-xl bg-[#ccff00]/15 border border-[#ccff00]/30 text-[#ccff00] text-xs font-mono flex items-center gap-2">
+            <Check className="w-4 h-4 text-[#ccff00] shrink-0" />
             <span>{successMessage}</span>
           </div>
         )}
@@ -158,7 +158,7 @@ export const ProgramJsonModal: React.FC<ProgramJsonModalProps> = ({
               setError(null);
             }}
             rows={14}
-            className="w-full p-3 rounded-xl bg-zinc-950 text-emerald-400 font-mono text-[11px] leading-relaxed border border-white/10 focus:outline-none focus:border-emerald-500 selection:bg-emerald-500/30"
+            className="w-full p-3 rounded-xl bg-zinc-950 text-[#ccff00] font-mono text-[11px] leading-relaxed border border-white/10 focus:outline-none focus:border-[#ccff00] selection:bg-[#ccff00]/30"
             spellCheck={false}
           />
         </div>
@@ -167,7 +167,7 @@ export const ProgramJsonModal: React.FC<ProgramJsonModalProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs font-mono uppercase tracking-wider transition-all duration-200 active:scale-98 glow-emerald"
+          className="w-full py-3 rounded-xl bg-[#ccff00] hover:bg-[#d9f99d] text-black font-bold text-xs font-mono uppercase tracking-wider transition-all duration-200 active:scale-98 glow-neon"
         >
           Применить изменения JSON
         </button>

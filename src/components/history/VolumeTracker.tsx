@@ -92,7 +92,7 @@ export const VolumeTracker: React.FC = () => {
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
           <div className="text-[10px] font-mono text-zinc-400 uppercase">Всего повторений</div>
-          <div className="text-xl font-bold font-mono text-emerald-400 mt-0.5">
+          <div className="text-xl font-bold font-mono text-[#ccff00] mt-0.5">
             {stats.totalRepsAll}
           </div>
         </div>
@@ -124,7 +124,7 @@ export const VolumeTracker: React.FC = () => {
                 </div>
                 <div className="h-2 rounded-full bg-zinc-800/80 overflow-hidden border border-white/5">
                   <div
-                    className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-[#ccff00] to-[#d9f99d] rounded-full transition-all duration-500"
                     style={{ width: `${barPercent}%` }}
                   />
                 </div>

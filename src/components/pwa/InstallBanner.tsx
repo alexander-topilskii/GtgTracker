@@ -56,15 +56,15 @@ export const InstallBanner: React.FC = () => {
 
   if (isStandalone || installedSuccessfully) {
     return (
-      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-emerald-500/25">
+      <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-[#ccff00]/30">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-[#ccff00]/15 border border-[#ccff00]/30 flex items-center justify-center text-[#ccff00] shrink-0">
             <Check className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
             <div className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
               Приложение установлено
-              <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[9px]">
+              <span className="px-1.5 py-0.2 rounded-full bg-[#ccff00]/20 text-[#ccff00] font-mono text-[9px]">
                 Standalone
               </span>
             </div>
@@ -81,7 +81,7 @@ export const InstallBanner: React.FC = () => {
     <div className="p-4 rounded-2xl bg-[#12151f]/80 backdrop-blur-md border border-white/[0.08] space-y-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-[#ccff00]/10 border border-[#ccff00]/25 flex items-center justify-center text-[#ccff00] shrink-0">
             <Smartphone className="w-5 h-5" />
           </div>
           <div>
@@ -100,7 +100,7 @@ export const InstallBanner: React.FC = () => {
           <button
             type="button"
             onClick={handleInstallClick}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all active:scale-98 shadow-md shadow-emerald-500/20"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-[#ccff00] hover:bg-[#d9f99d] text-black text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all active:scale-98 shadow-md shadow-[#ccff00]/25"
           >
             <Download className="w-4 h-4 stroke-[2.5]" />
             <span>Установить сейчас</span>
@@ -114,7 +114,7 @@ export const InstallBanner: React.FC = () => {
             }}
             className="flex-1 py-2.5 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-mono font-semibold flex items-center justify-center gap-2 border border-white/10 transition-all active:scale-98"
           >
-            <Share className="w-3.5 h-3.5 text-emerald-400" />
+            <Share className="w-3.5 h-3.5 text-[#ccff00]" />
             <span>Инструкция по установке</span>
             {showGuide ? (
               <ChevronUp className="w-3.5 h-3.5 text-zinc-400" />
@@ -130,7 +130,7 @@ export const InstallBanner: React.FC = () => {
         <div className="p-3 rounded-xl bg-zinc-900/90 border border-white/10 text-xs font-mono text-zinc-300 space-y-2 animate-fade-in">
           {isIOS ? (
             <>
-              <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+              <div className="flex items-center gap-1.5 text-[#ccff00] font-bold">
                 <Share className="w-3.5 h-3.5" />
                 <span>Для пользователей iPhone / iPad (Safari):</span>
               </div>
@@ -142,7 +142,7 @@ export const InstallBanner: React.FC = () => {
             </>
           ) : (
             <>
-              <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+              <div className="flex items-center gap-1.5 text-[#ccff00] font-bold">
                 <Download className="w-3.5 h-3.5" />
                 <span>Для Android / Chrome:</span>
               </div>
