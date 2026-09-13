@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useWorkout } from '../../context/WorkoutContext';
 import { ExerciseConfig, DayType } from '../../types/workout';
-import { Plus, Trash2, Edit3, Save, ShieldCheck } from 'lucide-react';
+import { Plus, Trash2, Edit3, Save } from 'lucide-react';
 import { haptic } from '../../utils/haptics';
 
 export const ProgramVisualEditor: React.FC = () => {
@@ -95,14 +95,6 @@ export const ProgramVisualEditor: React.FC = () => {
             {d === 'A' ? 'План дня А (Верх)' : 'План дня Б (Руки/Ноги)'}
           </button>
         ))}
-      </div>
-
-      {/* Памятка об иммутабельности */}
-      <div className="p-3 rounded-xl bg-[#ccff00]/10 border border-[#ccff00]/25 flex items-start gap-2 text-xs font-mono text-[#ccff00]">
-        <ShieldCheck className="w-4 h-4 text-[#ccff00] shrink-0 mt-0.5" />
-        <span>
-          Любые правки нормативов и упражнений применяются только к новым тренировкам. Вся история тренировок сохраняется в исходном виде.
-        </span>
       </div>
 
       {/* Список упражнений дня */}

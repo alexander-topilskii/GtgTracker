@@ -150,9 +150,6 @@ export const SettingsView: React.FC = () => {
             Авто-отсчет
           </span>
         </div>
-        <p className="text-xs text-zinc-400 font-mono leading-relaxed">
-          Приложение автоматически чередует дни (вчера А → сегодня Б), а каждое воскресенье переходит в режим отдыха. При необходимости выберите день вручную:
-        </p>
 
         <div className="grid grid-cols-3 gap-1.5 pt-1">
           {([
