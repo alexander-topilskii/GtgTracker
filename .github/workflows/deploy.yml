@@ -27,7 +27,7 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p dist
-          cp index.html dist/index.html
+          cp index.html manifest.webmanifest sw.js icon.svg dist/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

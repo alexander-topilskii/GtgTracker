@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Трекер тренировок — Турник и Брусья</title>
+  <meta name="theme-color" content="#09090b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="База 7" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
 
   <!-- Шрифт Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -140,6 +147,20 @@
           <!-- Генерируется через JS -->
         </div>
       </footer>
+
+      <!-- Кнопка установки на устройство (PWA) -->
+      <div id="install-app-wrap" class="pt-1 flex justify-center">
+        <button
+          id="install-app-btn"
+          type="button"
+          class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs font-medium text-zinc-700 dark:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+          </svg>
+          <span>Установить на устройство</span>
+        </button>
+      </div>
     </main>
   </div>
 
@@ -278,6 +299,47 @@
           <span>Скачать .md</span>
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- МОДАЛЬНОЕ ОКНО ИНСТРУКЦИИ УСТАНОВКИ НА УСТРОЙСТВО            -->
+  <!-- ============================================================ -->
+  <div
+    id="install-modal"
+    class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/40 backdrop-blur-[2px] p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-sm rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 shadow-xl">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h3 class="text-sm font-semibold">Установить на устройство</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Добавить «База 7» на главный экран</p>
+        </div>
+        <button
+          id="install-close-btn"
+          type="button"
+          aria-label="Закрыть"
+          class="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div id="install-instructions" class="space-y-2.5 text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
+        <!-- Заполняется через JS в зависимости от платформы -->
+      </div>
+
+      <button
+        id="install-ok-btn"
+        type="button"
+        class="w-full mt-4 py-2.5 px-3 rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 text-xs font-medium hover:opacity-90 active:scale-95 transition-all"
+      >
+        Понятно
+      </button>
     </div>
   </div>
 
@@ -1194,6 +1256,88 @@
 
     /**
      * ============================================================
+     * УСТАНОВКА НА УСТРОЙСТВО (PWA)
+     * ============================================================
+     */
+    function initPwaInstall() {
+      const elInstallWrap = document.getElementById('install-app-wrap');
+      const elInstallBtn = document.getElementById('install-app-btn');
+      const elInstallModal = document.getElementById('install-modal');
+      const elInstallInstructions = document.getElementById('install-instructions');
+      let deferredPrompt = null;
+
+      const isStandalone =
+        (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+        window.navigator.standalone === true;
+
+      if (isStandalone) {
+        elInstallWrap.classList.add('hidden');
+        return;
+      }
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        elInstallWrap.classList.add('hidden');
+        showToast('Приложение установлено');
+      });
+
+      function closeInstallModal() {
+        elInstallModal.classList.add('hidden');
+        elInstallModal.classList.remove('flex');
+      }
+
+      document.getElementById('install-close-btn').addEventListener('click', closeInstallModal);
+      document.getElementById('install-ok-btn').addEventListener('click', closeInstallModal);
+      elInstallModal.addEventListener('click', (e) => {
+        if (e.target === elInstallModal) closeInstallModal();
+      });
+
+      elInstallBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          deferredPrompt = null;
+          if (outcome === 'accepted') {
+            elInstallWrap.classList.add('hidden');
+            showToast('Приложение установлено');
+          }
+          return;
+        }
+
+        const ua = navigator.userAgent || '';
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+        if (isIOS) {
+          elInstallInstructions.innerHTML = `
+            <p class="rounded-2xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 p-3">
+              1. Нажмите кнопку <strong class="text-zinc-900 dark:text-zinc-100">«Поделиться»</strong> на панели Safari.<br/>
+              2. Выберите пункт <strong class="text-zinc-900 dark:text-zinc-100">«На экран „Домой“»</strong> и нажмите <strong class="text-zinc-900 dark:text-zinc-100">«Добавить»</strong>.
+            </p>
+          `;
+        } else {
+          elInstallInstructions.innerHTML = `
+            <p class="rounded-2xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 p-3">
+              Откройте меню браузера (<strong class="text-zinc-900 dark:text-zinc-100">⋮</strong> или <strong class="text-zinc-900 dark:text-zinc-100">⋯</strong>) и выберите <strong class="text-zinc-900 dark:text-zinc-100">«Установить приложение»</strong> или <strong class="text-zinc-900 dark:text-zinc-100">«Добавить на главный экран»</strong>.
+            </p>
+          `;
+        }
+
+        elInstallModal.classList.remove('hidden');
+        elInstallModal.classList.add('flex');
+      });
+    }
+
+    /**
+     * ============================================================
      * ОБЩИЙ РЕНДЕР И СТАРТ
      * ============================================================
      */
@@ -1205,6 +1349,7 @@
 
     function init() {
       initTheme();
+      initPwaInstall();
 
       const now = new Date();
       elHeaderDate.textContent = now.toLocaleDateString('ru-RU', {
