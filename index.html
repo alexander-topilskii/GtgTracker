@@ -1,26 +1,1223 @@
 <!DOCTYPE html>
-<html lang="ru" class="dark h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    
-    <title>GtG Tracker — Grease the Groove</title>
-    <meta name="description" content="Минималистичный мобильный PWA-трекер для микротренировок по методологии Grease the Groove" />
-    
-    <!-- PWA & Mobile Web App Settings -->
-    <meta name="theme-color" content="#1a1f2b" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="GtG Tracker" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 5v14M18 5v14M2 12h20M6 12a3 3 0 0 0 6 0M12 12a3 3 0 0 0 6 0'/></svg>" />
+<html lang="ru" class="antialiased">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Трекер тренировок — Турник и Брусья</title>
 
-    <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  </head>
-  <body class="bg-[#1a1f2b] text-zinc-100 font-sans h-full overflow-hidden select-none antialiased">
-    <div id="root" class="h-full"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <!-- Шрифт Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    /* Убираем стандартные стрелки у числового поля */
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 min-h-screen transition-colors duration-200 selection:bg-emerald-500/20">
+
+  <!-- Основной контейнер (mobile-first) -->
+  <div class="max-w-lg mx-auto px-4 pt-5 pb-20 sm:pt-7">
+
+    <!-- Верхняя шапка -->
+    <header class="flex items-center justify-between gap-3 mb-5">
+      <div>
+        <h1 class="text-lg font-semibold tracking-tight leading-none">База 7</h1>
+        <p id="header-date" class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 capitalize"></p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Кнопка экспорта недели -->
+        <button
+          id="open-export-btn"
+          type="button"
+          class="px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs font-medium text-zinc-700 dark:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-600 active:scale-95 transition-all flex items-center gap-1.5"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0-12l-4 4m4-4l4 4" />
+          </svg>
+          <span>Экспорт недели</span>
+        </button>
+
+        <!-- Переключатель светлой / темной темы -->
+        <button
+          id="theme-toggle"
+          type="button"
+          aria-label="Переключить тему"
+          class="p-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white active:scale-95 transition-all"
+        >
+          <svg class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+          <svg class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="4" />
+            <path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="space-y-4">
+      <!-- Недельная сводка -->
+      <section class="grid grid-cols-3 gap-2">
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2.5">
+          <div class="text-[11px] text-zinc-500 dark:text-zinc-400">Подтягивания</div>
+          <div id="stat-pullups" class="text-lg font-semibold tabular-nums mt-0.5">0</div>
+        </div>
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2.5">
+          <div class="text-[11px] text-zinc-500 dark:text-zinc-400">Брусья</div>
+          <div id="stat-dips" class="text-lg font-semibold tabular-nums mt-0.5">0</div>
+        </div>
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2.5">
+          <div class="text-[11px] text-zinc-500 dark:text-zinc-400">Закрыто дней</div>
+          <div id="stat-days" class="text-lg font-semibold tabular-nums mt-0.5">0 / 7</div>
+        </div>
+      </section>
+
+      <!-- Панель выбора дня недели (Пн–Вс) -->
+      <nav aria-label="Дни недели" id="day-selector" class="grid grid-cols-7 gap-1.5">
+        <!-- Генерируется через JS -->
+      </nav>
+
+      <!-- Заголовок выбранного дня -->
+      <section class="flex items-end justify-between gap-2 pt-1">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 id="day-title" class="text-base font-semibold tracking-tight">Понедельник</h2>
+            <span
+              id="day-today-badge"
+              class="hidden text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+            >
+              Сегодня
+            </span>
+          </div>
+          <p id="day-subtitle" class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Сила и контроль</p>
+        </div>
+        <div id="day-date-label" class="text-xs text-zinc-400 dark:text-zinc-500 tabular-nums"></div>
+      </section>
+
+      <!-- Список карточек упражнений -->
+      <section id="exercises-container" class="space-y-3">
+        <!-- Генерируется через JS -->
+      </section>
+
+      <!-- Подсказка и кнопка сброса недели -->
+      <footer class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-zinc-200/70 dark:border-zinc-800/80">
+        <p class="text-[11px] text-zinc-400 dark:text-zinc-500 text-center sm:text-left">
+          1 тап — отметить подход · 2-й тап — изменить число
+        </p>
+        <div id="reset-week-zone" class="flex items-center gap-2 shrink-0">
+          <!-- Генерируется через JS -->
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ПОДХОДА (2-Й ТАП)              -->
+  <!-- ============================================================ -->
+  <div
+    id="set-modal"
+    class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/40 backdrop-blur-[2px] p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-sm rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 shadow-xl">
+      <div class="flex items-start justify-between gap-3 mb-4">
+        <div>
+          <h3 id="modal-ex-name" class="text-sm font-semibold">Подтягивания</h3>
+          <p id="modal-set-label" class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Подход 1</p>
+        </div>
+        <button
+          id="modal-close-btn"
+          type="button"
+          aria-label="Закрыть"
+          class="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Степпер числа повторений / секунд -->
+      <div class="flex items-center justify-center gap-3 my-5">
+        <button
+          id="modal-minus-btn"
+          type="button"
+          class="w-12 h-12 rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-xl font-medium flex items-center justify-center active:scale-95 transition-all"
+        >
+          −
+        </button>
+        <div class="flex flex-col items-center">
+          <input
+            id="modal-value-input"
+            type="number"
+            min="0"
+            max="999"
+            inputmode="numeric"
+            class="w-24 text-center text-3xl font-semibold tabular-nums bg-transparent focus:outline-none border-b-2 border-zinc-200 dark:border-zinc-700 focus:border-emerald-500 pb-1"
+          />
+          <span id="modal-unit-label" class="text-[11px] text-zinc-400 mt-1">повторений</span>
+        </div>
+        <button
+          id="modal-plus-btn"
+          type="button"
+          class="w-12 h-12 rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-xl font-medium flex items-center justify-center active:scale-95 transition-all"
+        >
+          +
+        </button>
+      </div>
+
+      <!-- Кнопки действий -->
+      <div class="grid grid-cols-2 gap-2 mt-4">
+        <button
+          id="modal-uncheck-btn"
+          type="button"
+          class="py-2.5 px-3 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-95 transition-all"
+        >
+          Снять отметку
+        </button>
+        <button
+          id="modal-save-btn"
+          type="button"
+          class="py-2.5 px-3 rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 text-xs font-medium hover:opacity-90 active:scale-95 transition-all"
+        >
+          Сохранить
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- МОДАЛЬНОЕ ОКНО ЭКСПОРТА НЕДЕЛЬНОГО ОТЧЕТА                    -->
+  <!-- ============================================================ -->
+  <div
+    id="export-modal"
+    class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/40 backdrop-blur-[2px] p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-md rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 shadow-xl flex flex-col max-h-[85vh]">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h3 class="text-sm font-semibold">Отчет за неделю</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Готовый текст для отправки в чат</p>
+        </div>
+        <button
+          id="export-close-btn"
+          type="button"
+          aria-label="Закрыть"
+          class="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Превью Markdown-отчета -->
+      <textarea
+        id="export-textarea"
+        readonly
+        rows="12"
+        class="w-full flex-1 text-xs font-mono leading-relaxed bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3.5 text-zinc-800 dark:text-zinc-200 focus:outline-none resize-none"
+      ></textarea>
+
+      <!-- Кнопки копирования и скачивания -->
+      <div class="grid grid-cols-2 gap-2 mt-4">
+        <button
+          id="export-copy-btn"
+          type="button"
+          class="py-2.5 px-3 rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 text-xs font-medium hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1.5"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+          </svg>
+          <span id="export-copy-label">Скопировать отчет</span>
+        </button>
+        <button
+          id="export-download-btn"
+          type="button"
+          class="py-2.5 px-3 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-95 transition-all flex items-center justify-center gap-1.5"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
+          </svg>
+          <span>Скачать .md</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Тост-уведомление -->
+  <div
+    id="toast"
+    class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-200"
+  >
+    <div id="toast-text" class="px-4 py-2.5 rounded-2xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 text-xs font-medium shadow-lg whitespace-nowrap">
+      Скопировано!
+    </div>
+  </div>
+
+  <script>
+    /**
+     * ============================================================
+     * 7-ДНЕВНЫЙ ПЛАН ТРЕНИРОВОК (ТУРНИК + БРУСЬЯ)
+     * ============================================================
+     */
+    const WORKOUT_PLAN = [
+      {
+        key: 'mon',
+        short: 'Пн',
+        full: 'Понедельник',
+        focus: 'Сила и контроль',
+        exercises: [
+          {
+            id: 'mon-pullups',
+            name: 'Подтягивания',
+            detail: 'Медленно вниз 3с, пауза 1с наверху',
+            rest: 'Перерыв: 2–3 мин',
+            setsCount: 5,
+            target: 9,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'pullups',
+          },
+          {
+            id: 'mon-dips',
+            name: 'Брусья',
+            detail: 'Пауза 2с внизу',
+            rest: 'Перерыв: 2–3 мин',
+            setsCount: 5,
+            target: 14,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'dips',
+          },
+          {
+            id: 'mon-aussie',
+            name: 'Австралийские подтягивания на брусьях',
+            detail: 'Горизонтальная тяга к жерди',
+            rest: 'Перерыв: 90 сек',
+            setsCount: 3,
+            target: 14,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'other',
+          },
+        ],
+      },
+      {
+        key: 'tue',
+        short: 'Вт',
+        full: 'Вторник',
+        focus: 'Микро-сессия (5–10 мин)',
+        exercises: [
+          {
+            id: 'tue-pullups',
+            name: 'Подтягивания',
+            detail: 'Легко, без усталости',
+            rest: 'Перерыв: в течение дня',
+            setsCount: 3,
+            target: 5,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'pullups',
+          },
+          {
+            id: 'tue-shrugs',
+            name: 'Шраги на брусьях (лопатки)',
+            detail: 'Прямые руки, работа только лопатками',
+            rest: 'Перерыв: 60 сек',
+            setsCount: 2,
+            target: 15,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'other',
+          },
+          {
+            id: 'tue-hang',
+            name: 'Вис на турнике',
+            detail: 'Спокойное дыхание, разгрузка плеч',
+            rest: 'Перерыв: 60–90 сек',
+            setsCount: 2,
+            target: 50,
+            unit: 'с',
+            unitFull: 'секунд',
+            category: 'other',
+          },
+        ],
+      },
+      {
+        key: 'wed',
+        short: 'Ср',
+        full: 'Среда',
+        focus: 'Объем',
+        exercises: [
+          {
+            id: 'wed-pullups',
+            name: 'Подтягивания',
+            detail: 'Строго без отказа',
+            rest: 'Перерыв: 2–3 мин',
+            setsCount: 5,
+            target: 12,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'pullups',
+          },
+          {
+            id: 'wed-dips',
+            name: 'Брусья',
+            detail: 'Без отказа',
+            rest: 'Перерыв: 2–3 мин',
+            setsCount: 5,
+            target: 19,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'dips',
+          },
+          {
+            id: 'wed-lsit',
+            name: 'Уголок (L-sit) / подъемы ног в упоре',
+            detail: 'Плечи опущены, без раскачки',
+            rest: 'Перерыв: 90 сек',
+            setsCount: 3,
+            target: 12,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'other',
+          },
+        ],
+      },
+      {
+        key: 'thu',
+        short: 'Чт',
+        full: 'Четверг',
+        focus: 'Микро-сессия (5–10 мин)',
+        exercises: [
+          {
+            id: 'thu-shrugs',
+            name: 'Шраги на брусьях (лопатки)',
+            detail: 'Прямые руки, профилактика плеч',
+            rest: 'Перерыв: 60 сек',
+            setsCount: 2,
+            target: 15,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'other',
+          },
+          {
+            id: 'thu-legs',
+            name: 'Болгарские сплит-приседания',
+            detail: 'На каждую ногу',
+            rest: 'Перерыв: 90 сек',
+            setsCount: 3,
+            target: 12,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'other',
+          },
+          {
+            id: 'thu-hang',
+            name: 'Вис на турнике',
+            detail: 'Хват и декомпрессия спины',
+            rest: 'Перерыв: 60–90 сек',
+            setsCount: 2,
+            target: 50,
+            unit: 'с',
+            unitFull: 'секунд',
+            category: 'other',
+          },
+        ],
+      },
+      {
+        key: 'fri',
+        short: 'Пт',
+        full: 'Пятница',
+        focus: 'Плотность (EMOM)',
+        exercises: [
+          {
+            id: 'fri-pullups',
+            name: 'Подтягивания (EMOM 10 мин)',
+            detail: '10 подходов по минуте',
+            rest: 'Перерыв: старт каждую минуту (EMOM)',
+            setsCount: 10,
+            target: 6,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'pullups',
+          },
+          {
+            id: 'fri-dips',
+            name: 'Брусья',
+            detail: 'Оставлять 1–2 повторения в запасе',
+            rest: 'Перерыв: 2–3 мин',
+            setsCount: 3,
+            target: 21,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'dips',
+          },
+          {
+            id: 'fri-aussie',
+            name: 'Австралийские подтягивания (широкий хват)',
+            detail: 'Тяга к груди, сводя лопатки',
+            rest: 'Перерыв: 90 сек',
+            setsCount: 3,
+            target: 15,
+            unit: '',
+            unitFull: 'повторений',
+            category: 'other',
+          },
+        ],
+      },
+      {
+        key: 'sat',
+        short: 'Сб',
+        full: 'Суббота',
+        focus: 'Легкий день',
+        exercises: [
+          {
+            id: 'sat-hang',
+            name: 'Вис на турнике + разминка плеч',
+            detail: 'Мягкий вис и вращения плечами',
+            rest: 'Перерыв: 60 сек',
+            setsCount: 2,
+            target: 45,
+            unit: 'с',
+            unitFull: 'секунд',
+            category: 'other',
+          },
+          {
+            id: 'sat-walk',
+            name: 'Прогулка / бег / растяжка',
+            detail: 'Спокойное активное восстановление',
+            rest: 'Перерыв: по самочувствию',
+            setsCount: 1,
+            target: 30,
+            unit: 'м',
+            unitFull: 'минут',
+            category: 'other',
+          },
+        ],
+      },
+      {
+        key: 'sun',
+        short: 'Вс',
+        full: 'Воскресенье',
+        focus: 'Отдых',
+        isRestDay: true,
+        exercises: [],
+      },
+    ];
+
+    const STORAGE_KEY_WEEK = 'baza7_week_v2';
+    const STORAGE_KEY_THEME = 'baza7_theme_v1';
+
+    /**
+     * Индекс сегодняшнего дня недели: 0 (Пн) .. 6 (Вс)
+     */
+    function getTodayIndex() {
+      const jsDay = new Date().getDay();
+      return jsDay === 0 ? 6 : jsDay - 1;
+    }
+
+    /**
+     * Возвращает объект Date для дня текущей недели (0..6)
+     */
+    function getDateForDayIndex(dayIndex) {
+      const now = new Date();
+      const diff = dayIndex - getTodayIndex();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate() + diff);
+    }
+
+    function formatShortDate(dateObj) {
+      return dateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    }
+
+    function formatDotDate(dateObj) {
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      return `${d}.${m}`;
+    }
+
+    /**
+     * Безопасная работа с localStorage
+     */
+    function loadFromStorage(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function saveToStorage(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify(data));
+      } catch (e) {
+        // Игнорируем ограничения приватного режима
+      }
+    }
+
+    /**
+     * Создает чистое состояние недели
+     */
+    function createInitialWeekState() {
+      const state = {};
+      WORKOUT_PLAN.forEach((day) => {
+        if (day.isRestDay) {
+          state[day.key] = { restDone: false };
+        } else {
+          const exercisesState = {};
+          day.exercises.forEach((ex) => {
+            exercisesState[ex.id] = Array.from({ length: ex.setsCount }, () => ({
+              done: false,
+              value: ex.target,
+            }));
+          });
+          state[day.key] = { exercises: exercisesState };
+        }
+      });
+      return state;
+    }
+
+    /**
+     * Валидация сохраненного состояния на случай неполных данных
+     */
+    function ensureValidWeekState(loaded) {
+      const base = createInitialWeekState();
+      if (!loaded || typeof loaded !== 'object') return base;
+      WORKOUT_PLAN.forEach((day) => {
+        if (day.isRestDay) {
+          if (loaded[day.key] && typeof loaded[day.key].restDone === 'boolean') {
+            base[day.key].restDone = loaded[day.key].restDone;
+          }
+        } else if (loaded[day.key] && loaded[day.key].exercises) {
+          day.exercises.forEach((ex) => {
+            const savedSets = loaded[day.key].exercises[ex.id];
+            if (Array.isArray(savedSets) && savedSets.length > 0) {
+              base[day.key].exercises[ex.id] = savedSets.map((s) => ({
+                done: Boolean(s.done),
+                value: Number.isFinite(Number(s.value)) ? Number(s.value) : ex.target,
+              }));
+            }
+          });
+        }
+      });
+      return base;
+    }
+
+    // Состояние приложения
+    let weekState = ensureValidWeekState(loadFromStorage(STORAGE_KEY_WEEK, null));
+    let selectedDayIndex = getTodayIndex();
+    let editingTarget = null; // { dayKey, ex, setIdx }
+
+    // DOM-элементы
+    const elHeaderDate = document.getElementById('header-date');
+    const elDaySelector = document.getElementById('day-selector');
+    const elDayTitle = document.getElementById('day-title');
+    const elDaySubtitle = document.getElementById('day-subtitle');
+    const elDayTodayBadge = document.getElementById('day-today-badge');
+    const elDayDateLabel = document.getElementById('day-date-label');
+    const elExercisesContainer = document.getElementById('exercises-container');
+    const elStatPullups = document.getElementById('stat-pullups');
+    const elStatDips = document.getElementById('stat-dips');
+    const elStatDays = document.getElementById('stat-days');
+    const elResetWeekZone = document.getElementById('reset-week-zone');
+
+    // Модалка редактирования подхода
+    const elSetModal = document.getElementById('set-modal');
+    const elModalExName = document.getElementById('modal-ex-name');
+    const elModalSetLabel = document.getElementById('modal-set-label');
+    const elModalValueInput = document.getElementById('modal-value-input');
+    const elModalUnitLabel = document.getElementById('modal-unit-label');
+
+    // Модалка экспорта
+    const elExportModal = document.getElementById('export-modal');
+    const elExportTextarea = document.getElementById('export-textarea');
+    const elExportCopyLabel = document.getElementById('export-copy-label');
+
+    /**
+     * ============================================================
+     * ТЕМА (СВЕТЛАЯ / ТЕМНАЯ)
+     * ============================================================
+     */
+    function initTheme() {
+      const saved = loadFromStorage(STORAGE_KEY_THEME, null);
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      saveToStorage(STORAGE_KEY_THEME, isDark ? 'dark' : 'light');
+    });
+
+    /**
+     * ============================================================
+     * ТОСТ-УВЕДОМЛЕНИЕ
+     * ============================================================
+     */
+    let toastTimer = null;
+    function showToast(message) {
+      const elToast = document.getElementById('toast');
+      document.getElementById('toast-text').textContent = message;
+      elToast.classList.remove('opacity-0', 'translate-y-2');
+      elToast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        elToast.classList.add('opacity-0', 'translate-y-2');
+        elToast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2200);
+    }
+
+    /**
+     * ============================================================
+     * СТАТУСЫ И ПОДСЧЕТЫ
+     * ============================================================
+     */
+    function getDayStatus(day) {
+      const data = weekState[day.key];
+      if (day.isRestDay) {
+        return data.restDone ? 'done' : 'empty';
+      }
+      let total = 0;
+      let done = 0;
+      day.exercises.forEach((ex) => {
+        const sets = data.exercises[ex.id] || [];
+        total += sets.length;
+        done += sets.filter((s) => s.done).length;
+      });
+      if (done === 0) return 'empty';
+      if (done >= total) return 'done';
+      return 'partial';
+    }
+
+    function calculateWeeklyTotals() {
+      let pullups = 0;
+      let dips = 0;
+      let closedDays = 0;
+
+      WORKOUT_PLAN.forEach((day) => {
+        const status = getDayStatus(day);
+        if (status === 'done') closedDays += 1;
+
+        if (!day.isRestDay) {
+          day.exercises.forEach((ex) => {
+            const sets = weekState[day.key].exercises[ex.id] || [];
+            const sum = sets
+              .filter((s) => s.done)
+              .reduce((acc, s) => acc + (Number(s.value) || 0), 0);
+            if (ex.category === 'pullups') pullups += sum;
+            if (ex.category === 'dips') dips += sum;
+          });
+        }
+      });
+
+      return { pullups, dips, closedDays };
+    }
+
+    function updateWeeklyStats() {
+      const { pullups, dips, closedDays } = calculateWeeklyTotals();
+      elStatPullups.textContent = pullups;
+      elStatDips.textContent = dips;
+      elStatDays.textContent = `${closedDays} / 7`;
+    }
+
+    /**
+     * ============================================================
+     * РЕНДЕР ПАНЕЛИ ДНЕЙ НЕДЕЛИ
+     * ============================================================
+     */
+    function renderDaySelector() {
+      const todayIdx = getTodayIndex();
+      elDaySelector.innerHTML = '';
+
+      WORKOUT_PLAN.forEach((day, idx) => {
+        const isSelected = idx === selectedDayIndex;
+        const isToday = idx === todayIdx;
+        const status = getDayStatus(day);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `flex flex-col items-center justify-center py-2.5 rounded-2xl border text-xs font-medium transition-all active:scale-95 ${
+          isSelected
+            ? 'bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 dark:border-zinc-100 shadow-sm'
+            : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600'
+        }`;
+
+        // Индикатор выполнения под названием дня
+        let indicator = '';
+        if (status === 'done') {
+          indicator = `<span class="w-1.5 h-1.5 rounded-full mt-1.5 bg-emerald-500"></span>`;
+        } else if (status === 'partial') {
+          indicator = `<span class="w-1.5 h-1.5 rounded-full mt-1.5 border border-emerald-500"></span>`;
+        } else if (isToday) {
+          indicator = `<span class="w-1.5 h-1.5 rounded-full mt-1.5 ${
+            isSelected ? 'bg-white/50 dark:bg-zinc-900/40' : 'bg-zinc-300 dark:bg-zinc-600'
+          }"></span>`;
+        } else {
+          indicator = `<span class="w-1.5 h-1.5 rounded-full mt-1.5 bg-transparent"></span>`;
+        }
+
+        btn.innerHTML = `
+          <span>${day.short}</span>
+          ${indicator}
+        `;
+
+        btn.addEventListener('click', () => {
+          selectedDayIndex = idx;
+          renderAll();
+        });
+
+        elDaySelector.appendChild(btn);
+      });
+    }
+
+    /**
+     * ============================================================
+     * РЕНДЕР УПРАЖНЕНИЙ ВЫБРАННОГО ДНЯ
+     * ============================================================
+     */
+    function renderExercises() {
+      const dayPlan = WORKOUT_PLAN[selectedDayIndex];
+      const dayData = weekState[dayPlan.key];
+      const todayIdx = getTodayIndex();
+      const targetDate = getDateForDayIndex(selectedDayIndex);
+
+      elDayTitle.textContent = dayPlan.full;
+      elDaySubtitle.textContent = dayPlan.focus;
+      elDayTodayBadge.classList.toggle('hidden', selectedDayIndex !== todayIdx);
+      elDayDateLabel.textContent = formatShortDate(targetDate);
+
+      elExercisesContainer.innerHTML = '';
+
+      // Особый экран для воскресенья (День отдыха)
+      if (dayPlan.isRestDay) {
+        const restCard = document.createElement('article');
+        restCard.className = 'rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 text-center space-y-4';
+        restCard.innerHTML = `
+          <div class="w-11 h-11 mx-auto rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-300">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold">Полный отдых</h3>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed">
+              Сон, еда и восстановление связок. Никаких подходов на турнике и брусьях.
+            </p>
+          </div>
+          <button
+            id="rest-toggle-btn"
+            type="button"
+            class="w-full py-2.5 px-4 rounded-xl border text-xs font-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-all ${
+              dayData.restDone
+                ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-700 dark:text-emerald-300'
+                : 'bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400'
+            }"
+          >
+            <svg class="w-4 h-4 ${dayData.restDone ? 'text-emerald-500' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>${dayData.restDone ? 'День отдыха засчитан' : 'Отметить день отдыха'}</span>
+          </button>
+        `;
+
+        restCard.querySelector('#rest-toggle-btn').addEventListener('click', () => {
+          dayData.restDone = !dayData.restDone;
+          saveToStorage(STORAGE_KEY_WEEK, weekState);
+          renderAll();
+        });
+
+        elExercisesContainer.appendChild(restCard);
+        return;
+      }
+
+      // Обычные тренировочные дни
+      dayPlan.exercises.forEach((ex) => {
+        const sets = dayData.exercises[ex.id] || [];
+        const completedSets = sets.filter((s) => s.done);
+        const totalSum = completedSets.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
+
+        const card = document.createElement('article');
+        card.className = 'rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4';
+
+        // Верхняя часть карточки: название, описание, сумма и явный бейдж перерыва
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <h3 class="text-sm font-semibold leading-snug">${ex.name}</h3>
+              <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">${ex.detail}</p>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-sm font-semibold tabular-nums ${
+                totalSum > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-400 dark:text-zinc-500'
+              }">
+                ${totalSum}${ex.unit ? `<span class="text-xs font-normal ml-0.5">${ex.unit}</span>` : ''}
+              </div>
+              <div class="text-[10px] text-zinc-400 dark:text-zinc-500 tabular-nums">
+                ${completedSets.length}/${sets.length}
+              </div>
+            </div>
+          </div>
+
+          <!-- Явный бейдж перерыва между подходами -->
+          <div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800/90 text-[11px] font-medium text-zinc-600 dark:text-zinc-300">
+            <svg class="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <path stroke-linecap="round" d="M12 7v5l3 2" />
+            </svg>
+            <span>${ex.rest}</span>
+          </div>
+        `;
+
+        // Сетка ячеек подходов
+        const setsWrap = document.createElement('div');
+        setsWrap.className = 'flex flex-wrap items-center gap-2 mt-3.5';
+
+        sets.forEach((setObj, sIdx) => {
+          const cell = document.createElement('button');
+          cell.type = 'button';
+          cell.setAttribute(
+            'aria-label',
+            `${ex.name}, подход ${sIdx + 1}: ${setObj.value}${ex.unit}${setObj.done ? ', выполнено' : ''}`
+          );
+
+          const displayVal = `${setObj.value}${ex.unit}`;
+
+          if (setObj.done) {
+            // Выполненная ячейка: число остается читаемым, поверх — четкая зеленая галочка
+            cell.className =
+              'relative min-w-[48px] h-12 px-2 rounded-xl border border-emerald-500/45 bg-emerald-500/10 dark:bg-emerald-500/15 flex items-center justify-center active:scale-95 transition-all select-none overflow-hidden';
+            cell.innerHTML = `
+              <span class="text-sm font-semibold tabular-nums text-emerald-950/70 dark:text-emerald-100/80 z-0">${displayVal}</span>
+              <svg class="absolute inset-0 w-7 h-7 m-auto text-emerald-500/75 dark:text-emerald-400/75 pointer-events-none z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            `;
+          } else {
+            // Невыполненная ячейка: показывает целевое количество повторов/секунд
+            cell.className =
+              'relative min-w-[48px] h-12 px-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-600 flex items-center justify-center active:scale-95 transition-all select-none';
+            cell.innerHTML = `
+              <span class="text-sm font-semibold tabular-nums">${displayVal}</span>
+            `;
+          }
+
+          cell.addEventListener('click', () => {
+            if (!setObj.done) {
+              // 1-й тап — отмечаем подход выполненным
+              setObj.done = true;
+              if (!setObj.value || setObj.value <= 0) {
+                setObj.value = ex.target;
+              }
+              saveToStorage(STORAGE_KEY_WEEK, weekState);
+              renderAll();
+            } else {
+              // 2-й тап — открываем редактор числа и снятия отметки
+              openSetModal(dayPlan.key, ex, sIdx);
+            }
+          });
+
+          setsWrap.appendChild(cell);
+        });
+
+        // Кнопка добавления дополнительного подхода «+»
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.title = 'Добавить подход';
+        addBtn.className =
+          'w-12 h-12 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:border-zinc-500 flex items-center justify-center text-base active:scale-95 transition-all';
+        addBtn.textContent = '+';
+        addBtn.addEventListener('click', () => {
+          sets.push({ done: false, value: ex.target });
+          saveToStorage(STORAGE_KEY_WEEK, weekState);
+          renderAll();
+        });
+        setsWrap.appendChild(addBtn);
+
+        card.appendChild(setsWrap);
+        elExercisesContainer.appendChild(card);
+      });
+    }
+
+    /**
+     * ============================================================
+     * МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ПОДХОДА
+     * ============================================================
+     */
+    function openSetModal(dayKey, ex, setIdx) {
+      editingTarget = { dayKey, ex, setIdx };
+      const setObj = weekState[dayKey].exercises[ex.id][setIdx];
+
+      elModalExName.textContent = ex.name;
+      elModalSetLabel.textContent = `Подход ${setIdx + 1} · цель ${ex.target}${ex.unit}`;
+      elModalValueInput.value = setObj.value;
+      elModalUnitLabel.textContent = ex.unitFull || 'повторений';
+
+      elSetModal.classList.remove('hidden');
+      elSetModal.classList.add('flex');
+    }
+
+    function closeSetModal() {
+      editingTarget = null;
+      elSetModal.classList.add('hidden');
+      elSetModal.classList.remove('flex');
+    }
+
+    document.getElementById('modal-close-btn').addEventListener('click', closeSetModal);
+    elSetModal.addEventListener('click', (e) => {
+      if (e.target === elSetModal) closeSetModal();
+    });
+
+    document.getElementById('modal-minus-btn').addEventListener('click', () => {
+      const cur = Number(elModalValueInput.value) || 0;
+      elModalValueInput.value = Math.max(0, cur - 1);
+    });
+
+    document.getElementById('modal-plus-btn').addEventListener('click', () => {
+      const cur = Number(elModalValueInput.value) || 0;
+      elModalValueInput.value = Math.min(999, cur + 1);
+    });
+
+    document.getElementById('modal-save-btn').addEventListener('click', () => {
+      if (!editingTarget) return;
+      const { dayKey, ex, setIdx } = editingTarget;
+      const val = Math.max(0, Math.min(999, parseInt(elModalValueInput.value, 10) || 0));
+      weekState[dayKey].exercises[ex.id][setIdx].value = val;
+      weekState[dayKey].exercises[ex.id][setIdx].done = val > 0;
+      saveToStorage(STORAGE_KEY_WEEK, weekState);
+      closeSetModal();
+      renderAll();
+    });
+
+    document.getElementById('modal-uncheck-btn').addEventListener('click', () => {
+      if (!editingTarget) return;
+      const { dayKey, ex, setIdx } = editingTarget;
+      weekState[dayKey].exercises[ex.id][setIdx].done = false;
+      saveToStorage(STORAGE_KEY_WEEK, weekState);
+      closeSetModal();
+      renderAll();
+    });
+
+    /**
+     * ============================================================
+     * ГЕНЕРАЦИЯ И ЭКСПОРТ НЕДЕЛЬНОГО ОТЧЕТА
+     * ============================================================
+     */
+    function buildWeeklyMarkdownReport() {
+      const monDate = getDateForDayIndex(0);
+      const sunDate = getDateForDayIndex(6);
+      const { pullups, dips, closedDays } = calculateWeeklyTotals();
+
+      const lines = [];
+      lines.push(`# Отчет за неделю (${formatDotDate(monDate)} – ${formatDotDate(sunDate)})`);
+      lines.push('');
+      lines.push(`- **Подтягивания:** ${pullups}`);
+      lines.push(`- **Брусья:** ${dips}`);
+      lines.push(`- **Закрыто дней:** ${closedDays} / 7`);
+      lines.push('');
+
+      WORKOUT_PLAN.forEach((day, idx) => {
+        const dStr = formatDotDate(getDateForDayIndex(idx));
+        const status = getDayStatus(day);
+
+        if (day.isRestDay) {
+          lines.push(`**${day.short} (${dStr}) — ${day.focus}:** ${weekState[day.key].restDone ? 'выполнено' : 'не отмечено'}`);
+          return;
+        }
+
+        const statusMark = status === 'done' ? '✓' : status === 'partial' ? 'частично' : 'пропущено';
+        lines.push(`**${day.short} (${dStr}) — ${day.focus}** [${statusMark}]`);
+
+        day.exercises.forEach((ex) => {
+          const sets = weekState[day.key].exercises[ex.id] || [];
+          const doneSets = sets.filter((s) => s.done);
+
+          if (doneSets.length === 0) {
+            lines.push(`- ${ex.name}: — (пропущено)`);
+          } else {
+            const valsList = doneSets.map((s) => `${s.value}${ex.unit}`).join(', ');
+            const sum = doneSets.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
+            const partialNote = doneSets.length < sets.length ? `, ${doneSets.length}/${sets.length} подх.` : '';
+            lines.push(`- ${ex.name}: ${valsList} (итого ${sum}${ex.unit}${partialNote})`);
+          }
+        });
+        lines.push('');
+      });
+
+      return lines.join('\n').trim();
+    }
+
+    function openExportModal() {
+      elExportTextarea.value = buildWeeklyMarkdownReport();
+      elExportCopyLabel.textContent = 'Скопировать отчет';
+      elExportModal.classList.remove('hidden');
+      elExportModal.classList.add('flex');
+    }
+
+    function closeExportModal() {
+      elExportModal.classList.add('hidden');
+      elExportModal.classList.remove('flex');
+    }
+
+    document.getElementById('open-export-btn').addEventListener('click', openExportModal);
+    document.getElementById('export-close-btn').addEventListener('click', closeExportModal);
+    elExportModal.addEventListener('click', (e) => {
+      if (e.target === elExportModal) closeExportModal();
+    });
+
+    // Копирование отчета (надежный метод через textarea + execCommand для работы внутри iframe)
+    document.getElementById('export-copy-btn').addEventListener('click', () => {
+      try {
+        elExportTextarea.focus();
+        elExportTextarea.select();
+        elExportTextarea.setSelectionRange(0, elExportTextarea.value.length);
+        const ok = document.execCommand('copy');
+        if (ok) {
+          elExportCopyLabel.textContent = 'Скопировано!';
+          showToast('Отчет скопирован в буфер');
+          setTimeout(() => {
+            elExportCopyLabel.textContent = 'Скопировать отчет';
+          }, 2000);
+          return;
+        }
+      } catch (e) {
+        // Fallback ниже
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(elExportTextarea.value).then(() => {
+          elExportCopyLabel.textContent = 'Скопировано!';
+          showToast('Отчет скопирован в буфер');
+          setTimeout(() => {
+            elExportCopyLabel.textContent = 'Скопировать отчет';
+          }, 2000);
+        });
+      } else {
+        showToast('Выдели текст и скопируй вручную');
+      }
+    });
+
+    // Скачивание .md файла
+    document.getElementById('export-download-btn').addEventListener('click', () => {
+      const content = elExportTextarea.value;
+      const monStr = formatDotDate(getDateForDayIndex(0));
+      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `workout-week-${monStr}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Файл .md скачан');
+    });
+
+    /**
+     * ============================================================
+     * СБРОС НЕДЕЛИ (ИНЛАЙН-ПОДТВЕРЖДЕНИЕ БЕЗ confirm)
+     * ============================================================
+     */
+    function renderResetWeekControl() {
+      elResetWeekZone.innerHTML = `
+        <button
+          id="new-week-btn"
+          type="button"
+          class="px-3 py-1.5 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-95 transition-all"
+        >
+          Новая неделя
+        </button>
+      `;
+
+      document.getElementById('new-week-btn').addEventListener('click', () => {
+        elResetWeekZone.innerHTML = `
+          <span class="text-xs text-zinc-500">Сбросить все отметки?</span>
+          <button id="confirm-reset-btn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 active:scale-95 transition-all">Да</button>
+          <button id="cancel-reset-btn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 active:scale-95 transition-all">Нет</button>
+        `;
+
+        document.getElementById('confirm-reset-btn').addEventListener('click', () => {
+          weekState = createInitialWeekState();
+          saveToStorage(STORAGE_KEY_WEEK, weekState);
+          renderResetWeekControl();
+          renderAll();
+          showToast('Начата новая неделя');
+        });
+
+        document.getElementById('cancel-reset-btn').addEventListener('click', () => {
+          renderResetWeekControl();
+        });
+      });
+    }
+
+    /**
+     * ============================================================
+     * ОБЩИЙ РЕНДЕР И СТАРТ
+     * ============================================================
+     */
+    function renderAll() {
+      updateWeeklyStats();
+      renderDaySelector();
+      renderExercises();
+    }
+
+    function init() {
+      initTheme();
+
+      const now = new Date();
+      elHeaderDate.textContent = now.toLocaleDateString('ru-RU', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      });
+
+      renderResetWeekControl();
+      renderAll();
+    }
+
+    init();
+  </script>
+</body>
 </html>
